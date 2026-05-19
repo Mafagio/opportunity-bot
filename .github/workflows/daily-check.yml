@@ -1,0 +1,46 @@
+name: Daily opportunity check
+
+on:
+  schedule:
+    # 06:00 UTC = 07:00 Zurich en hiver, 08:00 en été.
+    # Cron GitHub Actions est en UTC. Adapte si tu préfères un autre horaire.
+    - cron: '0 6 * * *'
+  workflow_dispatch:  # Permet de lancer manuellement depuis l'onglet Actions
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Nécessaire pour commit le state mis à jour
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run bot
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python bot.py
+
+      - name: Commit updated state
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add state/
+          if git diff --staged --quiet; then
+            echo "Aucun changement de state à committer."
+          else
+            git commit -m "Update state $(date -u +%Y-%m-%d)"
+            git push
+          fi

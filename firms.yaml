@@ -1,0 +1,67 @@
+# Liste des firms à surveiller.
+# Ajoute / retire ce que tu veux. Vérifie que les URLs ne renvoient pas une 404.
+# Astuce : si une page nécessite JavaScript pour afficher les jobs (ex : Workday),
+# trouve l'URL de la "career site" sous-jacente plutôt que la landing page.
+
+- name: Jane Street
+  url: https://www.janestreet.com/join-jane-street/open-roles/
+
+- name: Optiver Europe
+  url: https://optiver.com/working-at-optiver/career-opportunities/?location=europe
+
+- name: IMC
+  url: https://www.imc.com/eu/careers/
+
+- name: Citadel Securities
+  url: https://www.citadelsecurities.com/careers/open-opportunities/
+
+- name: Citadel
+  url: https://www.citadel.com/careers/open-opportunities/
+
+- name: Hudson River Trading
+  url: https://www.hudsonrivertrading.com/careers/
+
+- name: Da Vinci Trading
+  url: https://davincitrading.com/careers/
+
+- name: Maven Securities
+  url: https://www.mavensecurities.com/careers/
+
+- name: DRW
+  url: https://drw.com/work-at-drw/listings
+
+- name: Five Rings
+  url: https://www.fiverings.com/careers
+
+- name: Flow Traders
+  url: https://www.flowtraders.com/careers/vacancies
+
+- name: Jump Trading
+  url: https://www.jumptrading.com/careers/
+
+- name: D.E. Shaw
+  url: https://www.deshaw.com/careers/jobs
+
+- name: SIG (Susquehanna)
+  url: https://careers.sig.com/students/
+
+- name: Two Sigma
+  url: https://careers.twosigma.com/careers/SearchJobs/
+
+- name: G-Research
+  url: https://www.gresearch.com/careers/
+
+- name: XTX Markets
+  url: https://www.xtxmarkets.com/careers/
+
+- name: Akuna Capital
+  url: https://akunacapital.com/careers
+
+- name: Tower Research Capital
+  url: https://www.tower-research.com/open-positions/
+
+- name: Quadrature Capital
+  url: https://www.quadraturecapital.com/careers
+
+- name: Millennium
+  url: https://www.mlp.com/careers-search/
