@@ -1,7 +1,7 @@
 # Profil — Matteo Giori
 
 **Identité :** Matteo Giori, étudiant à l'EPFL (École Polytechnique Fédérale de Lausanne)
-**Contact :** matteogiori2005@gmail.com · +41 79 951 82 02
+**Contact :** matteogiori2005@gmail.com 
 **LinkedIn :** linkedin.com/in/matteo-giori
 **Localisation actuelle :** Lausanne, Suisse
 
