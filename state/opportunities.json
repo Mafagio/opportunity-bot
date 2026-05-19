@@ -142,5 +142,24 @@
     "source": "careers_page",
     "first_seen": "2026-05-19T20:28:47.145729+00:00",
     "last_seen": "2026-05-19T20:28:47.145729+00:00"
+  },
+  {
+    "id": "36ab1e4dd1e059ed",
+    "firm": "The Voleon Group",
+    "program_name": "Research Intern (London)",
+    "deadline": "Non précisée — candidature ouverte, postuler immédiatement",
+    "deadline_iso": null,
+    "location": "Londres, Royaume-Uni",
+    "eligibility": "Étudiants en mathématiques, statistiques, informatique ou domaines quantitatifs connexes ; niveau Master ou PhD typiquement requis chez Voleon",
+    "format": "Stage de recherche, durée standard 10-12 semaines (probablement été 2026 ou 2027), in-person Londres",
+    "key_info": "Postuler immédiatement via LinkedIn (offre active). Préparer : CV à jour mettant en avant HMM/EM thesis, factor models GARCH (recherche Malamud), IMC Prosperity Top 1%, Pictet 2nd place. Voleon est ML-heavy : anticiper questions de stat/ML avancé (régression, séries temporelles, inférence bayésienne) et coding test Python. Cover letter à personnaliser sur l'angle ML appliqué aux marchés.",
+    "apply_url": "https://www.linkedin.com/comm/jobs/view/4407422298",
+    "priority_score": 9,
+    "pre_application": "Dear Hiring Team,\n\nI am writing to apply for the Research Intern position at The Voleon Group in London. As a third-year Mathematics student at EPFL — continuing to a Master's in Applied Mathematics at ETH Zürich — I have built a strong foundation in the statistical and machine learning methods that define Voleon's research philosophy.\n\nMy academic work sits precisely at the intersection of ML and financial markets. Under Professor Semyon Malamud (Director of EPFL's MSc Financial Engineering), I developed multivariate GARCH and factor-model pipelines for portfolio risk forecasting with rigorous out-of-sample evaluation. My Bachelor's thesis applies Hidden Markov Models and the EM algorithm to detect latent regime changes in financial time series — directly aligned with Voleon's data-driven, model-agnostic approach.\n\nIn competition settings, I ranked in the top 1% globally at IMC Prosperity 4 and placed 2nd at the Pictet Quant Challenge, presenting systematic signal construction directly to asset managers. I scored 6/6 in Statistics and achieved the top grade in Bayesian Statistics this semester.\n\nI am excited by Voleon's commitment to applying rigorous ML to systematic trading, and I believe my research background, Python proficiency, and passion for quantitative methods make me a strong fit.\n\nThank you for your consideration.\n\nMatteo Giori",
+    "action_required": "apply_now",
+    "reasoning": "Voleon est un hedge fund ML-first de très haute réputation, Londres est la localisation prioritaire de Matteo, et le poste de Research Intern colle parfaitement à son profil : HMM thesis, GARCH/factor models avec Malamud, Bayesian stats top de classe, IMC Top 1%. Offre active maintenant — priorité maximale.",
+    "source": "linkedin_alerts",
+    "first_seen": "2026-05-19T21:22:54.708654+00:00",
+    "last_seen": "2026-05-19T21:22:54.708654+00:00"
   }
 ]
