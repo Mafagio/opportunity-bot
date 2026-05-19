@@ -1,15 +1,14 @@
-# Liste des firms et sources à surveiller — v3
-# Ajoute / retire ce que tu veux.
+# Liste des firms et sources à surveiller — v4
+# (post run #3 : URLs cassées commentées avec annotation)
 #
-# Conventions :
-#   - [JS]   = utilise du JavaScript pour charger les jobs (Workday, etc.).
-#             Le scraper verra une page vide → comptes sur Google Alerts.
-#             Commente la ligne si elle retourne "page vide" plusieurs runs.
-#   - [AUTH] = nécessite authentification (login wall). Inutile pour le scraper.
+# Légende d'erreurs :
+#   [403]  Anti-bot actif. Solution : Google Alerts.
+#   [404]  URL inexistante. Solution : Google Alerts ou trouver la bonne URL.
+#   [DNS]  Domaine ne résout pas.
+#   [JS]   Page JavaScript-heavy, scrape vide mais pas d'erreur HTTP.
 #
-# NOTE COÛT : avec ~55 firms + emails actifs, le bot coûte ~5-15 USD/mois en
-# tokens Claude selon l'activité (most days, peu de changements donc peu d'analyses).
-# Surveille la consommation sur console.anthropic.com → Usage.
+# Les URLs commentées sont gardées pour référence — décommente si tu trouves
+# une URL alternative qui marche.
 
 # ============================================================
 # TIER 1 — Pure quant / market making / HFT
@@ -24,11 +23,13 @@
 - name: IMC
   url: https://www.imc.com/eu/careers/
 
-- name: Citadel Securities
-  url: https://www.citadelsecurities.com/careers/open-opportunities/
+# [403] Citadel Securities bloque les scrapers. Google Alerts indispensables.
+# - name: Citadel Securities
+#   url: https://www.citadelsecurities.com/careers/open-opportunities/
 
-- name: Citadel
-  url: https://www.citadel.com/careers/open-opportunities/
+# [403] Citadel idem
+# - name: Citadel
+#   url: https://www.citadel.com/careers/open-opportunities/
 
 - name: Hudson River Trading
   url: https://www.hudsonrivertrading.com/careers/
@@ -42,8 +43,9 @@
 - name: Five Rings
   url: https://www.fiverings.com/careers
 
-- name: Flow Traders
-  url: https://www.flowtraders.com/careers/vacancies
+# [404] Flow Traders — URL changée, à investiguer
+# - name: Flow Traders
+#   url: https://www.flowtraders.com/careers/vacancies
 
 - name: SIG (Susquehanna)
   url: https://careers.sig.com/students/
@@ -60,8 +62,9 @@
 - name: Old Mission Capital
   url: https://www.oldmissioncapital.com/careers/
 
-- name: Vatic Investments
-  url: https://vaticinvestments.com/work-with-us/
+# [404] Vatic Investments
+# - name: Vatic Investments
+#   url: https://vaticinvestments.com/work-with-us/
 
 - name: Tibra Capital
   url: https://www.tibra.com/careers
@@ -73,8 +76,9 @@
 - name: D.E. Shaw
   url: https://www.deshaw.com/careers/jobs
 
-- name: Two Sigma
-  url: https://careers.twosigma.com/careers/SearchJobs/
+# [404] Two Sigma — URL changée
+# - name: Two Sigma
+#   url: https://careers.twosigma.com/careers/SearchJobs/
 
 - name: G-Research
   url: https://www.gresearch.com/careers/
@@ -85,8 +89,9 @@
 - name: AQR Capital
   url: https://www.aqr.com/About-Us/careers
 
-- name: Marshall Wace
-  url: https://www.mwam.com/people/careers/
+# [404] Marshall Wace
+# - name: Marshall Wace
+#   url: https://www.mwam.com/people/careers/
 
 - name: Capula Investment Management
   url: https://capula.com/careers
@@ -103,104 +108,121 @@
 - name: Trexquant
   url: https://www.trexquant.com/careers
 
-- name: Verition Fund Management
-  url: https://www.veritionfund.com/careers/
+# [DNS] Verition — domaine non résolu, peut-être renommé
+# - name: Verition Fund Management
+#   url: https://www.veritionfund.com/careers/
 
-- name: Squarepoint Capital
-  url: https://www.squarepoint-capital.com/careers
+# [404] Squarepoint Capital
+# - name: Squarepoint Capital
+#   url: https://www.squarepoint-capital.com/careers
 
 - name: Schonfeld
   url: https://www.schonfeld.com/careers/
 
-- name: Millennium
-  url: https://www.mlp.com/careers-search/
+# [404] Millennium
+# - name: Millennium
+#   url: https://www.mlp.com/careers-search/
 
 - name: Brevan Howard
   url: https://www.brevanhoward.com/careers/
 
-- name: BlueCrest Capital
+- name: BlueCrest Capital  # [JS] souvent vide
   url: https://www.bluecrestcapital.com/careers/
 
-- name: Lansdowne Partners
+- name: Lansdowne Partners  # [JS] souvent vide
   url: https://www.lansdownepartners.com/careers/
 
 # ============================================================
 # TIER 3 — Smaller quant / proprietary trading
 # ============================================================
 
-- name: Da Vinci Trading
-  url: https://davincitrading.com/careers/
+# [403] Da Vinci Trading — anti-bot
+# - name: Da Vinci Trading
+#   url: https://davincitrading.com/careers/
 
-- name: Maven Securities
-  url: https://www.mavensecurities.com/careers/
+# [404] Maven Securities
+# - name: Maven Securities
+#   url: https://www.mavensecurities.com/careers/
 
 # ============================================================
-# TIER 4 — Investment banks (programmes quant à Londres)
-# Beaucoup tournent sur Workday → potentiellement vides côté scraper.
-# La compensation : Google Alerts ciblées sur ces noms + LinkedIn alerts.
+# TIER 4 — Investment banks (Londres)
+# Note : ces firms scrappent mal en général (Workday + JS-heavy).
+# Compte sur les Google Alerts pour les capter.
 # ============================================================
 
-- name: Goldman Sachs (Students)
+- name: Goldman Sachs (Students)  # [JS] généralement vide
   url: https://www.goldmansachs.com/careers/students/programs/
 
-- name: JPMorgan (Students)
+- name: JPMorgan (Students)  # [JS] généralement vide
   url: https://careers.jpmorgan.com/global/en/students/programs
 
-- name: Morgan Stanley (Students)
-  url: https://www.morganstanley.com/people/students-and-graduates
+# [404] Morgan Stanley
+# - name: Morgan Stanley (Students)
+#   url: https://www.morganstanley.com/people/students-and-graduates
 
-- name: Barclays (QAG / Students)
-  url: https://search.jobs.barclays/students-and-graduates
+# [404] Barclays
+# - name: Barclays (QAG / Students)
+#   url: https://search.jobs.barclays/students-and-graduates
 
-- name: Deutsche Bank (Students)
-  url: https://careers.db.com/students/positions/internship/
+# [404] Deutsche Bank
+# - name: Deutsche Bank (Students)
+#   url: https://careers.db.com/students/positions/internship/
 
-- name: BNP Paribas CIB (Students)
-  url: https://group.bnpparibas/en/our-careers
+# [403] BNP Paribas
+# - name: BNP Paribas CIB (Students)
+#   url: https://group.bnpparibas/en/our-careers
 
-- name: Nomura (Students)
-  url: https://www.nomura.com/europe/careers/students.html
+# [404] Nomura
+# - name: Nomura (Students)
+#   url: https://www.nomura.com/europe/careers/students.html
 
-- name: Macquarie (Students)
-  url: https://www.macquarie.com/au/en/about/careers/students.html
+# [404] Macquarie
+# - name: Macquarie (Students)
+#   url: https://www.macquarie.com/au/en/about/careers/students.html
 
 # ============================================================
 # TIER 5 — Banques et firms suisses
 # ============================================================
 
-- name: UBS (Investment Bank)
-  url: https://www.ubs.com/global/en/careers/students.html
+# [403] UBS — anti-bot
+# - name: UBS (Investment Bank)
+#   url: https://www.ubs.com/global/en/careers/students.html
 
 - name: Pictet Asset Management
   url: https://group.pictet/careers/
 
-- name: Vontobel
-  url: https://www.vontobel.com/en/about/career/internships-and-traineeships/
+# [404] Vontobel
+# - name: Vontobel
+#   url: https://www.vontobel.com/en/about/career/internships-and-traineeships/
 
-- name: Lombard Odier
-  url: https://www.lombardodier.com/careers/student-and-graduates.html
+# [404] Lombard Odier
+# - name: Lombard Odier
+#   url: https://www.lombardodier.com/careers/student-and-graduates.html
 
-- name: Partners Group
+- name: Partners Group  # private equity, peu de quant
   url: https://www.partnersgroup.com/en/careers/
 
-- name: Swiss Re
-  url: https://www.swissre.com/about-us/careers/early-careers.html
+# [404] Swiss Re
+# - name: Swiss Re
+#   url: https://www.swissre.com/about-us/careers/early-careers.html
 
-- name: Zurich Insurance Group
-  url: https://www.zurich.com/en/careers/students-and-graduates
+# [404] Zurich Insurance
+# - name: Zurich Insurance Group
+#   url: https://www.zurich.com/en/careers/students-and-graduates
 
 # ============================================================
-# TIER 6 — Asset managers globaux avec équipes quant
+# TIER 6 — Asset managers globaux
 # ============================================================
 
-- name: BlackRock (Students)
-  url: https://careers.blackrock.com/students-graduates/
+# [404] BlackRock
+# - name: BlackRock (Students)
+#   url: https://careers.blackrock.com/students-graduates/
 
-- name: State Street Global Advisors
+- name: State Street Global Advisors  # [JS] souvent vide
   url: https://careers.statestreet.com/students
 
 # ============================================================
-# AGGREGATORS — sources tierces (souvent JS-heavy)
+# AGGREGATORS — sources tierces
 # ============================================================
 
 - name: QuantNet Forum
@@ -209,16 +231,10 @@
 - name: RateMyPlacement (Finance UK)
   url: https://www.ratemyplacement.co.uk/jobs/quantitative-analyst
 
-# [JS] arc.dev — probablement vide
-- name: arc.dev (Quant Trader)
-  url: https://arc.dev/jobs/quantitative-trader
+# [404] arc.dev
+# - name: arc.dev (Quant Trader)
+#   url: https://arc.dev/jobs/quantitative-trader
 
-# [JS] Wellfound — probablement vide
-- name: Wellfound (Quant Dev)
-  url: https://wellfound.com/role/quantitative-developer
-
-# [AUTH] The Trackr — ne marche pas en scraping direct.
-# À la place : active les notifications email sur ton compte trackr et
-# forwarde-les vers ton Gmail. Le module email les ingèrera comme Google Alerts.
-# - name: The Trackr UK Finance
-#   url: https://app.the-trackr.com/uk-finance/spring-weeks
+# [403] Wellfound — anti-bot
+# - name: Wellfound (Quant Dev)
+#   url: https://wellfound.com/role/quantitative-developer
