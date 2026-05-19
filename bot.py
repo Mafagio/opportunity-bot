@@ -4,10 +4,12 @@ Bot de veille des opportunités stages/discovery trading.
 Pipeline :
   1. Scrape les pages careers de firms.yaml
   2. Lit les emails (Google Alerts + LinkedIn) via email_sources.py si configuré
-  3. Pour chaque changement, demande à Claude d'analyser et de classifier
-     l'urgence (apply_now / prepare_for_open / add_to_watchlist)
-  4. Notifie sur Telegram + enregistre dans state/opportunities.json
-  5. Génère le site web docs/index.html (servi par GitHub Pages)
+  3. Pour chaque source, demande à Claude d'identifier TOUTES les opportunités
+     présentes (un email LinkedIn peut contenir 5-15 jobs, une page careers
+     peut afficher plusieurs programmes).
+  4. Pour chaque opportunité détectée : notif Telegram + stockage dans
+     state/opportunities.json pour le site.
+  5. Génère le site web docs/index.html (servi par GitHub Pages).
 """
 import os
 import json
@@ -127,16 +129,12 @@ def save_opportunities(opps):
     )
 
 
-def record_opportunity(source_label, source_kind, fallback_url, analysis):
+def record_opportunity(source_label, source_kind, fallback_url, opp_data):
     """Stocke (ou met à jour) l'opportunité dans opportunities.json.
-    Garde un historique de OPPORTUNITY_RETENTION_DAYS jours.
-
-    Dedup par (firm, program_name). On préfère analysis.firm si Claude l'a extrait,
-    sinon on retombe sur source_label.
-    """
+    Dedup par hash de (firm, program_name)."""
     opps = load_opportunities()
-    firm = analysis.get("firm") or source_label
-    program = analysis.get("program_name") or "Programme non spécifié"
+    firm = opp_data.get("firm") or source_label
+    program = opp_data.get("program_name") or "Programme non spécifié"
     opp_id = hashlib.sha256(f"{firm}::{program}".encode("utf-8")).hexdigest()[:16]
     now = datetime.now(timezone.utc).isoformat()
 
@@ -146,19 +144,18 @@ def record_opportunity(source_label, source_kind, fallback_url, analysis):
     opp = {
         "id": opp_id,
         "firm": firm,
-        "program_name": analysis.get("program_name"),
-        "deadline": analysis.get("deadline"),
-        "deadline_iso": analysis.get("deadline_iso"),
-        "location": analysis.get("location"),
-        "eligibility": analysis.get("eligibility"),
-        "format": analysis.get("format"),
-        "key_info": analysis.get("key_info"),
-        "apply_url": analysis.get("apply_url") or fallback_url,
-        "priority_score": analysis.get("priority_score"),
-        "pre_application": analysis.get("pre_application"),
-        "action_required": analysis.get("action_required") or "add_to_watchlist",
-        "reasoning": analysis.get("reasoning"),
-        "source": source_kind,  # ex: "careers_page", "google_alerts", "linkedin_alerts"
+        "program_name": opp_data.get("program_name"),
+        "deadline": opp_data.get("deadline"),
+        "deadline_iso": opp_data.get("deadline_iso"),
+        "location": opp_data.get("location"),
+        "eligibility": opp_data.get("eligibility"),
+        "format": opp_data.get("format"),
+        "key_info": opp_data.get("key_info"),
+        "apply_url": opp_data.get("apply_url") or fallback_url,
+        "priority_score": opp_data.get("priority_score"),
+        "pre_application": opp_data.get("pre_application"),
+        "action_required": opp_data.get("action_required") or "add_to_watchlist",
+        "source": source_kind,
         "first_seen": first_seen,
         "last_seen": now,
     }
@@ -166,7 +163,6 @@ def record_opportunity(source_label, source_kind, fallback_url, analysis):
     opps = [o for o in opps if o.get("id") != opp_id]
     opps.append(opp)
 
-    # Nettoie l'historique
     cutoff = (datetime.now(timezone.utc) - timedelta(days=OPPORTUNITY_RETENTION_DAYS)).isoformat()
     opps = [o for o in opps if o.get("last_seen", "") >= cutoff]
 
@@ -174,11 +170,16 @@ def record_opportunity(source_label, source_kind, fallback_url, analysis):
 
 
 # ============================================================
-# Analyse Claude
+# Analyse Claude — extraction multi-opportunités
 # ============================================================
 
 def analyze_with_claude(client, source_label, old_content, new_content, profile):
-    """Demande à Claude d'analyser le changement et de générer une pré-application."""
+    """Demande à Claude d'extraire TOUTES les opportunités d'une source.
+
+    Retourne un dict avec clés :
+      - opportunities : liste d'opportunités (peut être vide)
+      - reasoning : explication globale
+    """
     is_first_run = not old_content
 
     prompt = f"""Tu es un assistant qui aide un étudiant EPFL / futur ETH Master à détecter et postuler à des programmes de stage/discovery dans les firms de quant trading.
@@ -195,39 +196,56 @@ NOUVEAU CONTENU :
 {new_content}
 
 TÂCHE :
-1. Identifie s'il y a une opportunité (programme discovery, internship, spring week, kickstarter, graduate role, off-cycle, etc.) qui correspond au profil.
-2. {"Comme c'est la première analyse, signale toutes les opportunités pertinentes actuellement visibles." if is_first_run else "Compare l'ancien et le nouveau contenu : signale uniquement les NOUVEAUTÉS, pas ce qui était déjà là."}
-3. Détermine l'**action_required** :
+Le contenu fourni peut contenir UNE OU PLUSIEURS opportunités. Par exemple :
+- Un email d'alerte LinkedIn liste typiquement 5-15 jobs différents.
+- Un email Google Alerts mentionne plusieurs annonces.
+- Une page careers peut afficher plusieurs programmes (intern, graduate, off-cycle, spring week, etc.).
+**EXTRAIS TOUTES LES OPPORTUNITÉS PERTINENTES** pour le profil, pas seulement la première.
+
+Pour chaque opportunité identifiée :
+1. {"Comme c'est la première analyse, signale tout ce qui est actuellement visible et pertinent." if is_first_run else "Compare l'ancien et le nouveau contenu : signale uniquement les NOUVEAUTÉS."}
+2. Détermine action_required :
    - "apply_now" : candidature OUVERTE, deadline visible et imminente (< 4 semaines) → postuler maintenant
-   - "prepare_for_open" : programme annoncé pour ouverture future (typiquement quelques mois) → préparer CV / cover letter / questions techniques à l'avance
-   - "add_to_watchlist" : info encore vague (pas de deadline claire, programme à venir) → simplement à surveiller
-   - "not_relevant" : changement détecté mais pas d'opportunité pertinente pour le profil
-4. Extrait toutes les infos disponibles (deadline, éligibilité, format, localisation, nom officiel de la firme dans `firm`).
-5. Dans `key_info`, sois CONCRET sur quoi préparer ET quand : CV à jour, cover letter, online assessment (HackerRank/Codility), video interview HireVue, math/probability test, case study, etc. + timing par rapport à aujourd'hui.
-6. Si pertinent (apply_now ou prepare_for_open), génère une PRÉ-APPLICATION : lettre de motivation de ~180 mots, en anglais (sauf firme francophone), personnalisée pour CE programme spécifique. Valorise les forces concrètes du profil (Pictet 2nd place, IMC Prosperity Top 1%, recherche Malamud sur factor models / GARCH, présidence Financial Association EPFL avec speakers Jane Street / Jump / HRT, 6/6 en stats, double EPFL→ETH, etc.).
-7. Score la priorité de 1 à 10 selon : pertinence (profil maths/CS), prestige de la firme, urgence de la deadline, alignement géographique (Londres > Amsterdam/EU > reste, pas de US).
+   - "prepare_for_open" : programme annoncé pour ouverture future → préparer à l'avance
+   - "add_to_watchlist" : info encore vague (pas de deadline claire) → à surveiller
+   - "not_relevant" : pas pertinent pour le profil (sera filtré)
+3. Extrais firm, program_name, deadline, location, eligibility, format, apply_url.
+4. Dans key_info : sois CONCRET sur quoi préparer ET quand (CV, cover letter, online assessment HackerRank/Codility, video interview, math test, etc.).
+5. Si action_required est "apply_now" ou "prepare_for_open" : génère une pré-application de ~180 mots, en anglais (sauf firme francophone), personnalisée pour CE programme. Valorise les forces concrètes du profil (Pictet 2nd place, IMC Prosperity Top 1%, recherche Malamud sur factor models / GARCH, présidence Financial Association EPFL avec speakers Jane Street / Jump / HRT, 6/6 stats, double EPFL→ETH).
+6. Score 1-10 (pertinence profil + prestige firme + urgence deadline + alignement géographique : Londres > Amsterdam/EU > reste, pas de US).
+
+FILTRES À APPLIQUER (mets action_required: "not_relevant") :
+- Rôles trop seniors (Senior Quant, VP, Director, MD, Head of, etc.).
+- Rôles non quant/tech/finance (Marketing, HR, Sales, Operations, Recruiting).
+- Firms hors-domaine quant/finance (random SaaS, biotech, retail, etc.).
+- Localisations US-only (le profil n'a pas de visa US).
 
 Réponds UNIQUEMENT en JSON valide, sans markdown, sans backticks. Schéma :
 {{
-  "is_new_opportunity": true ou false,
-  "action_required": "apply_now" | "prepare_for_open" | "add_to_watchlist" | "not_relevant",
-  "firm": "Nom officiel de la firme (ex: Jane Street)" ou null,
-  "program_name": "nom du programme" ou null,
-  "deadline": "date ou période" ou null,
-  "deadline_iso": "YYYY-MM-DD si une date concrète est identifiable (au moins année et mois ; jour = 01 si manquant), sinon null",
-  "location": "ville(s)" ou null,
-  "eligibility": "critères clés" ou null,
-  "format": "durée, in-person/remote, etc." ou null,
-  "key_info": "QUOI préparer concrètement et QUAND, 2-3 phrases max" ou null,
-  "apply_url": "URL directe de candidature si trouvée" ou null,
-  "priority_score": entier 1-10 ou null,
-  "pre_application": "lettre de motivation ~180 mots" ou null,
-  "reasoning": "pourquoi cette opportunité (ou pas) en max 80 mots"
-}}"""
+  "opportunities": [
+    {{
+      "action_required": "apply_now" | "prepare_for_open" | "add_to_watchlist" | "not_relevant",
+      "firm": "Nom officiel de la firme (ex: Jane Street, The Voleon Group)",
+      "program_name": "Nom exact du programme/rôle",
+      "deadline": "date ou période lisible" ou null,
+      "deadline_iso": "YYYY-MM-DD si date concrète identifiable (au moins année+mois ; jour = 01 si manquant), sinon null",
+      "location": "ville(s)" ou null,
+      "eligibility": "critères clés" ou null,
+      "format": "durée, in-person/remote, etc." ou null,
+      "key_info": "QUOI préparer et QUAND, 2-3 phrases max" ou null,
+      "apply_url": "URL directe de candidature si trouvée" ou null,
+      "priority_score": entier 1-10,
+      "pre_application": "lettre de motivation ~180 mots" ou null
+    }}
+  ],
+  "reasoning": "résumé global max 80 mots de ce qui a été analysé"
+}}
+
+Si AUCUNE opportunité pertinente trouvée : "opportunities": [] et explique pourquoi dans reasoning."""
 
     response = client.messages.create(
         model=CLAUDE_MODEL,
-        max_tokens=2500,
+        max_tokens=6000,  # plus large car liste d'opportunités
         messages=[{"role": "user", "content": prompt}],
     )
     raw = response.content[0].text.strip()
@@ -239,11 +257,19 @@ Réponds UNIQUEMENT en JSON valide, sans markdown, sans backticks. Schéma :
         raw = raw.strip().rstrip("`").strip()
 
     try:
-        return json.loads(raw)
+        parsed = json.loads(raw)
     except json.JSONDecodeError as e:
         print(f"  ⚠ JSON invalide pour {source_label}: {e}")
         print(f"  Raw: {raw[:500]}")
-        return {"is_new_opportunity": False, "reasoning": "JSON parse error"}
+        return {"opportunities": [], "reasoning": "JSON parse error"}
+
+    # Validation défensive
+    if not isinstance(parsed, dict):
+        return {"opportunities": [], "reasoning": "Réponse non-dict"}
+    opps = parsed.get("opportunities")
+    if not isinstance(opps, list):
+        parsed["opportunities"] = []
+    return parsed
 
 
 # ============================================================
@@ -267,6 +293,7 @@ def send_telegram(token, chat_id, message):
         )
         if not r.ok:
             print(f"  ⚠ Telegram error: {r.status_code} {r.text[:200]}")
+            # Fallback : texte brut sans parsing
             requests.post(
                 url,
                 json={"chat_id": chat_id, "text": chunk},
@@ -278,7 +305,14 @@ def md_escape(s):
     """Échappe les caractères Markdown problématiques pour Telegram."""
     if not s:
         return ""
-    return str(s).replace("_", r"\_").replace("*", r"\*").replace("[", r"\[")
+    # Échappe tous les caractères spéciaux Markdown Telegram
+    return (str(s)
+        .replace("\\", "\\\\")
+        .replace("_", r"\_")
+        .replace("*", r"\*")
+        .replace("[", r"\[")
+        .replace("]", r"\]")
+        .replace("`", r"\`"))
 
 
 ACTION_EMOJI = {
@@ -293,35 +327,35 @@ ACTION_LABEL = {
 }
 
 
-def format_message(source_label, fallback_url, analysis):
-    action = analysis.get("action_required") or "add_to_watchlist"
+def format_message(source_label, fallback_url, opp):
+    action = opp.get("action_required") or "add_to_watchlist"
     emoji = ACTION_EMOJI.get(action, "📍")
     label = ACTION_LABEL.get(action, "OPPORTUNITÉ")
-    score = analysis.get("priority_score") or 0
-    firm = analysis.get("firm") or source_label
+    score = opp.get("priority_score") or 0
+    firm = opp.get("firm") or source_label
 
     parts = [f"{emoji} *{label} — {md_escape(firm)}*", ""]
 
-    if analysis.get("program_name"):
-        parts.append(f"*Programme :* {md_escape(analysis['program_name'])}")
-    if analysis.get("deadline"):
-        parts.append(f"*Deadline :* {md_escape(analysis['deadline'])}")
-    if analysis.get("location"):
-        parts.append(f"*Localisation :* {md_escape(analysis['location'])}")
-    if analysis.get("eligibility"):
-        parts.append(f"*Éligibilité :* {md_escape(analysis['eligibility'])}")
-    if analysis.get("format"):
-        parts.append(f"*Format :* {md_escape(analysis['format'])}")
+    if opp.get("program_name"):
+        parts.append(f"*Programme :* {md_escape(opp['program_name'])}")
+    if opp.get("deadline"):
+        parts.append(f"*Deadline :* {md_escape(opp['deadline'])}")
+    if opp.get("location"):
+        parts.append(f"*Localisation :* {md_escape(opp['location'])}")
+    if opp.get("eligibility"):
+        parts.append(f"*Éligibilité :* {md_escape(opp['eligibility'])}")
+    if opp.get("format"):
+        parts.append(f"*Format :* {md_escape(opp['format'])}")
     parts.append(f"*Score :* {score}/10")
     parts.append("")
 
-    if analysis.get("key_info"):
-        parts.append(f"*À faire :*\n{md_escape(analysis['key_info'])}\n")
+    if opp.get("key_info"):
+        parts.append(f"*À faire :*\n{md_escape(opp['key_info'])}\n")
 
-    if analysis.get("pre_application"):
-        parts.append(f"*Pré-application :*\n{md_escape(analysis['pre_application'])}\n")
+    if opp.get("pre_application"):
+        parts.append(f"*Pré-application :*\n{md_escape(opp['pre_application'])}\n")
 
-    apply_url = analysis.get("apply_url") or fallback_url
+    apply_url = opp.get("apply_url") or fallback_url
     if apply_url:
         parts.append(f"🔗 {apply_url}")
     return "\n".join(parts)
@@ -367,18 +401,25 @@ def main():
                 continue
 
             print("  changement détecté → analyse Claude")
-            analysis = analyze_with_claude(client, name, old_content, filtered, profile)
+            result = analyze_with_claude(client, name, old_content, filtered, profile)
+            opps = result.get("opportunities", [])
 
-            action = analysis.get("action_required") or "add_to_watchlist"
-
-            if analysis.get("is_new_opportunity") and action != "not_relevant":
-                msg = format_message(name, url, analysis)
-                send_telegram(tg_token, tg_chat, msg)
-                record_opportunity(name, "careers_page", url, analysis)
-                notified += 1
-                print(f"  ✓ notifié [{action}] score {analysis.get('priority_score')}")
+            if not opps:
+                print(f"  rien à signaler : {result.get('reasoning', '')[:80]}")
             else:
-                print(f"  pas pertinent : {analysis.get('reasoning', '')[:80]}")
+                relevant_count = 0
+                for opp in opps:
+                    action = opp.get("action_required") or "add_to_watchlist"
+                    if action == "not_relevant":
+                        continue
+                    msg = format_message(name, url, opp)
+                    send_telegram(tg_token, tg_chat, msg)
+                    record_opportunity(name, "careers_page", url, opp)
+                    relevant_count += 1
+                    notified += 1
+                    print(f"  ✓ [{action}] {opp.get('firm', '?')} · {opp.get('program_name', '?')[:50]} · {opp.get('priority_score', '?')}/10")
+                if relevant_count == 0:
+                    print(f"  {len(opps)} opp(s) détectées mais toutes filtrées (not_relevant)")
 
             state[name] = {"hash": new_hash, "content": filtered[:6000]}
             time.sleep(1)

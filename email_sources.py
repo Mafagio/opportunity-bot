@@ -1,11 +1,12 @@
 """
 Module de lecture des emails (Google Alerts, LinkedIn Jobs alerts).
-Branché sur le même pipeline Claude → Telegram + feed que bot.py.
+Pour chaque email lu, Claude extrait TOUTES les opportunités présentes
+(un email LinkedIn liste 5-15 jobs typiquement).
 
-Setup nécessaire (voir SETUP_v2.md) :
-1. Activer 2FA sur le compte Gmail
-2. Créer un App Password : myaccount.google.com → Security → App passwords
-3. Ajouter aux secrets GitHub : GMAIL_USER, GMAIL_APP_PASSWORD
+Setup (voir SETUP_v2.md) :
+1. 2FA sur le Gmail
+2. App Password : myaccount.google.com → Security → App passwords
+3. Secrets GitHub : GMAIL_USER, GMAIL_APP_PASSWORD
 """
 import os
 import imaplib
@@ -76,8 +77,10 @@ def decode_subject(msg):
     return "".join(out)
 
 
-def extract_body(msg, max_chars=10000):
-    """Extrait le texte d'un email, fallback HTML→texte si nécessaire."""
+def extract_body(msg, max_chars=15000):
+    """Extrait le texte d'un email, fallback HTML→texte si nécessaire.
+    Limite à 15k chars (plus large que v1) pour ne pas tronquer les emails
+    LinkedIn qui listent plusieurs jobs."""
     text_body = ""
     html_body = ""
 
@@ -123,13 +126,10 @@ def process_email_sources(client, profile, analyze_fn, format_fn, send_fn,
                           record_fn, tg_token, tg_chat):
     """Traite tous les emails des sources configurées.
 
-    Arguments injectés (depuis bot.py) :
-      analyze_fn : analyze_with_claude
-      format_fn  : format_message
-      send_fn    : send_telegram
-      record_fn  : record_opportunity (pour le feed)
+    Pour chaque email : Claude extrait TOUTES les opportunités présentes,
+    et chacune est notifiée + enregistrée individuellement.
 
-    Retourne le nombre de notifications envoyées.
+    Retourne le nombre total de notifications envoyées.
     """
     mail = connect_imap()
     if mail is None:
@@ -166,24 +166,32 @@ def process_email_sources(client, profile, analyze_fn, format_fn, send_fn,
                         continue
 
                     label = f"{source_name} — {subject[:80]}"
-                    print(f"  Analyse : {subject[:60]}")
+                    print(f"  Analyse email : {subject[:70]}")
 
-                    analysis = analyze_fn(client, label, "", body, profile)
-                    action = analysis.get("action_required") or "add_to_watchlist"
+                    result = analyze_fn(client, label, "", body, profile)
+                    opps = result.get("opportunities", [])
 
-                    if analysis.get("is_new_opportunity") and action != "not_relevant":
-                        out = format_fn(label, "", analysis)
-                        send_fn(tg_token, tg_chat, out)
-                        record_fn(label, source_kind, "", analysis)
-                        notified += 1
-                        print(f"    ✓ notifié [{action}] score {analysis.get('priority_score')}")
+                    if not opps:
+                        print(f"    rien : {result.get('reasoning', '')[:60]}")
                     else:
-                        print(f"    pas pertinent : {analysis.get('reasoning', '')[:60]}")
+                        relevant = 0
+                        for opp in opps:
+                            action = opp.get("action_required") or "add_to_watchlist"
+                            if action == "not_relevant":
+                                continue
+                            out = format_fn(label, "", opp)
+                            send_fn(tg_token, tg_chat, out)
+                            record_fn(label, source_kind, "", opp)
+                            relevant += 1
+                            notified += 1
+                            print(f"    ✓ [{action}] {opp.get('firm', '?')} · {(opp.get('program_name') or '?')[:50]}")
+                        if relevant == 0 and opps:
+                            print(f"    {len(opps)} opps détectées mais toutes filtrées")
 
                     mark_as_read(mail, msg_id)
 
                 except Exception as e:
-                    print(f"  ⚠ erreur traitement email : {e}")
+                    print(f"  ⚠ erreur traitement email : {type(e).__name__}: {e}")
                     continue
 
     finally:
