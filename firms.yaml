@@ -1,7 +1,17 @@
-# Liste des firms à surveiller.
-# Ajoute / retire ce que tu veux. Vérifie que les URLs ne renvoient pas une 404.
-# Astuce : si une page nécessite JavaScript pour afficher les jobs (ex : Workday),
-# trouve l'URL de la "career site" sous-jacente plutôt que la landing page.
+# Liste des firms et sources à surveiller.
+# Ajoute / retire ce que tu veux.
+#
+# Conventions :
+#   - Les firms marquées [JS] utilisent du JavaScript pour charger les jobs.
+#     requests + BeautifulSoup verra une page vide. À surveiller en complément
+#     via Google Alerts (ces sources sont là au cas où le site sert aussi
+#     du contenu statique). Commente-les si tu vois "page vide" plusieurs runs.
+#   - Les firms marquées [AUTH] nécessitent une authentification. Le scraper
+#     verra une page de login. À retirer ou à surveiller via Google Alerts.
+
+# ============================================================
+# TIER 1 — Quant trading firms (HFT / market making)
+# ============================================================
 
 - name: Jane Street
   url: https://www.janestreet.com/join-jane-street/open-roles/
@@ -21,11 +31,8 @@
 - name: Hudson River Trading
   url: https://www.hudsonrivertrading.com/careers/
 
-- name: Da Vinci Trading
-  url: https://davincitrading.com/careers/
-
-- name: Maven Securities
-  url: https://www.mavensecurities.com/careers/
+- name: Jump Trading
+  url: https://www.jumptrading.com/careers/
 
 - name: DRW
   url: https://drw.com/work-at-drw/listings
@@ -36,14 +43,33 @@
 - name: Flow Traders
   url: https://www.flowtraders.com/careers/vacancies
 
-- name: Jump Trading
-  url: https://www.jumptrading.com/careers/
+- name: SIG (Susquehanna)
+  url: https://careers.sig.com/students/
+
+- name: XTX Markets
+  url: https://www.xtxmarkets.com/careers/
+
+- name: Tower Research Capital
+  url: https://www.tower-research.com/open-positions/
+
+- name: Akuna Capital
+  url: https://akunacapital.com/careers
+
+- name: Old Mission Capital
+  url: https://www.oldmissioncapital.com/careers/
+
+- name: Vatic Investments
+  url: https://vaticinvestments.com/work-with-us/
+
+- name: Tibra Capital
+  url: https://www.tibra.com/careers
+
+# ============================================================
+# TIER 2 — Quant research / systematic hedge funds
+# ============================================================
 
 - name: D.E. Shaw
   url: https://www.deshaw.com/careers/jobs
-
-- name: SIG (Susquehanna)
-  url: https://careers.sig.com/students/
 
 - name: Two Sigma
   url: https://careers.twosigma.com/careers/SearchJobs/
@@ -51,17 +77,73 @@
 - name: G-Research
   url: https://www.gresearch.com/careers/
 
-- name: XTX Markets
-  url: https://www.xtxmarkets.com/careers/
+- name: WorldQuant
+  url: https://www.worldquant.com/career-listing/
 
-- name: Akuna Capital
-  url: https://akunacapital.com/careers
+- name: AQR Capital
+  url: https://www.aqr.com/About-Us/careers
 
-- name: Tower Research Capital
-  url: https://www.tower-research.com/open-positions/
+- name: Marshall Wace
+  url: https://www.mwam.com/people/careers/
+
+- name: Capula Investment Management
+  url: https://capula.com/careers
+
+- name: Man Group
+  url: https://www.man.com/careers
 
 - name: Quadrature Capital
   url: https://www.quadraturecapital.com/careers
 
+- name: GSA Capital
+  url: https://www.gsacapital.com/careers/
+
+- name: Trexquant
+  url: https://www.trexquant.com/careers
+
+- name: Verition Fund Management
+  url: https://www.veritionfund.com/careers/
+
+- name: Squarepoint Capital
+  url: https://www.squarepoint-capital.com/careers
+
+- name: Schonfeld
+  url: https://www.schonfeld.com/careers/
+
 - name: Millennium
   url: https://www.mlp.com/careers-search/
+
+# ============================================================
+# TIER 3 — Smaller / specialty firms
+# ============================================================
+
+- name: Da Vinci Trading
+  url: https://davincitrading.com/careers/
+
+- name: Maven Securities
+  url: https://www.mavensecurities.com/careers/
+
+# ============================================================
+# AGGREGATORS — sources tierces (à tester, certaines JS-heavy)
+# ============================================================
+
+# Forum QuantNet — peut marcher (forum traditionnel, partiellement statique)
+- name: QuantNet Forum
+  url: https://www.quantnet.com/forum/quant-finance-jobs.41/
+
+# arc.dev quant jobs — [JS] probablement vide, à confirmer
+- name: arc.dev (Quant Trader)
+  url: https://arc.dev/jobs/quantitative-trader
+
+# wellfound.com (ex-AngelList) — [JS] probablement vide
+- name: Wellfound (Quant Dev)
+  url: https://wellfound.com/role/quantitative-developer
+
+# RateMyPlacement UK — internships UK, page de listing
+- name: RateMyPlacement (Finance UK)
+  url: https://www.ratemyplacement.co.uk/jobs/quantitative-analyst
+
+# The Trackr — [AUTH] payant et authentifié, scraper ne fonctionnera pas.
+# Garde l'URL ici en commentaire si tu veux la surveiller toi-même.
+# - name: The Trackr UK Finance
+#   url: https://app.the-trackr.com/uk-finance/summer-internships

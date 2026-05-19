@@ -1,8 +1,8 @@
 """
 Module de lecture des emails (Google Alerts, LinkedIn Jobs alerts).
-Se branche sur le même pipeline Claude → Telegram que bot.py.
+Branché sur le même pipeline Claude → Telegram + feed que bot.py.
 
-Setup nécessaire :
+Setup nécessaire (voir SETUP_v2.md) :
 1. Activer 2FA sur le compte Gmail
 2. Créer un App Password : myaccount.google.com → Security → App passwords
 3. Ajouter aux secrets GitHub : GMAIL_USER, GMAIL_APP_PASSWORD
@@ -18,14 +18,17 @@ from bs4 import BeautifulSoup
 EMAIL_SOURCES = [
     {
         "name": "Google Alerts",
+        "kind": "google_alerts",
         "from": "googlealerts-noreply@google.com",
     },
     {
         "name": "LinkedIn Jobs",
+        "kind": "linkedin_alerts",
         "from": "jobs-noreply@linkedin.com",
     },
     {
         "name": "LinkedIn Job Alerts",
+        "kind": "linkedin_alerts",
         "from": "jobalerts-noreply@linkedin.com",
     },
 ]
@@ -47,8 +50,7 @@ def connect_imap():
 
 
 def fetch_recent_unread(mail, sender, since_hours=26):
-    """Récupère les emails non lus d'un expéditeur sur les dernières N heures.
-    26h (pas 24) évite de rater des emails si le bot tourne un peu plus tard."""
+    """Récupère les emails non lus d'un expéditeur sur les dernières N heures."""
     since_date = (datetime.now() - timedelta(hours=since_hours)).strftime("%d-%b-%Y")
     status, ids = mail.search(None, f'(FROM "{sender}" SINCE {since_date} UNSEEN)')
     if status != "OK" or not ids[0]:
@@ -114,18 +116,18 @@ def extract_body(msg, max_chars=10000):
 
 
 def mark_as_read(mail, msg_id):
-    """Marque l'email comme lu pour ne pas le re-traiter au prochain run."""
     mail.store(msg_id, "+FLAGS", "\\Seen")
 
 
 def process_email_sources(client, profile, analyze_fn, format_fn, send_fn,
-                          tg_token, tg_chat):
+                          record_fn, tg_token, tg_chat):
     """Traite tous les emails des sources configurées.
 
     Arguments injectés (depuis bot.py) :
       analyze_fn : analyze_with_claude
       format_fn  : format_message
       send_fn    : send_telegram
+      record_fn  : record_opportunity (pour le feed)
 
     Retourne le nombre de notifications envoyées.
     """
@@ -138,6 +140,7 @@ def process_email_sources(client, profile, analyze_fn, format_fn, send_fn,
     try:
         for source in EMAIL_SOURCES:
             source_name = source["name"]
+            source_kind = source["kind"]
             sender = source["from"]
             print(f"→ {source_name} ({sender})")
 
@@ -166,12 +169,14 @@ def process_email_sources(client, profile, analyze_fn, format_fn, send_fn,
                     print(f"  Analyse : {subject[:60]}")
 
                     analysis = analyze_fn(client, label, "", body, profile)
+                    action = analysis.get("action_required") or "add_to_watchlist"
 
-                    if analysis.get("is_new_opportunity"):
+                    if analysis.get("is_new_opportunity") and action != "not_relevant":
                         out = format_fn(label, "", analysis)
                         send_fn(tg_token, tg_chat, out)
+                        record_fn(label, source_kind, "", analysis)
                         notified += 1
-                        print(f"    ✓ notifié (score {analysis.get('priority_score')})")
+                        print(f"    ✓ notifié [{action}] score {analysis.get('priority_score')}")
                     else:
                         print(f"    pas pertinent : {analysis.get('reasoning', '')[:60]}")
 
