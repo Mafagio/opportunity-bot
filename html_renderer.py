@@ -336,10 +336,13 @@ a { color: inherit; text-decoration: none; }
   position: sticky; top: 0; z-index: 10;
   display: flex; align-items: center;
   padding: 14px 32px;
-  background: rgba(10, 10, 10, 0.85);
+  background: rgba(10, 10, 10, 0.96);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-subtle);
+}
+:root[data-theme="light"] .topnav {
+  background: rgba(255, 255, 255, 0.96);
 }
 
 .topnav-logo {
@@ -575,18 +578,18 @@ main {
   box-shadow: none;
 }
 
-/* Vu = fade vers ~55% d'opacité sur tout sauf le bookmark */
+/* Vu = fade léger vers 0.7 d'opacité sur tout sauf le bookmark */
 .opp-row.seen .opp-date,
 .opp-row.seen .firm-logo,
 .opp-row.seen .opp-main,
 .opp-row.seen .opp-dleft-wrap {
-  opacity: 0.55;
+  opacity: 0.7;
 }
 .opp-row.seen:hover .opp-date,
 .opp-row.seen:hover .firm-logo,
 .opp-row.seen:hover .opp-main,
 .opp-row.seen:hover .opp-dleft-wrap {
-  opacity: 0.85;
+  opacity: 0.95;
 }
 
 /* Bordure latérale bleue sur les non-vues */
@@ -876,19 +879,6 @@ main {
 .fav-card:hover { background: var(--bg-2); border-color: var(--border); }
 .fav-card.unseen { background: rgba(59, 130, 246, 0.06); border-color: rgba(96, 165, 250, 0.22); }
 .fav-card.unseen:hover { background: rgba(59, 130, 246, 0.10); }
-/* Vu : opacité réduite, l'effet "déjà lu" */
-.fav-card:not(.unseen) .fav-card-firm,
-.fav-card:not(.unseen) .fav-card-program,
-.fav-card:not(.unseen) .fav-card-dates,
-.fav-card:not(.unseen) .firm-logo {
-  opacity: 0.6;
-}
-.fav-card:not(.unseen):hover .fav-card-firm,
-.fav-card:not(.unseen):hover .fav-card-program,
-.fav-card:not(.unseen):hover .fav-card-dates,
-.fav-card:not(.unseen):hover .firm-logo {
-  opacity: 0.95;
-}
 
 .fav-card::before {
   content: '';
