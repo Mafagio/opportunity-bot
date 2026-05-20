@@ -147,12 +147,15 @@ def record_opportunity(source_label, source_kind, fallback_url, opp_data):
         "program_name": opp_data.get("program_name"),
         "deadline": opp_data.get("deadline"),
         "deadline_iso": opp_data.get("deadline_iso"),
+        "start_date": opp_data.get("start_date"),
+        "start_date_iso": opp_data.get("start_date_iso"),
         "location": opp_data.get("location"),
         "eligibility": opp_data.get("eligibility"),
         "format": opp_data.get("format"),
         "key_info": opp_data.get("key_info"),
         "apply_url": opp_data.get("apply_url") or fallback_url,
         "priority_score": opp_data.get("priority_score"),
+        "firm_category": opp_data.get("firm_category") or "other",
         "pre_application": opp_data.get("pre_application"),
         "action_required": opp_data.get("action_required") or "add_to_watchlist",
         "source": source_kind,
@@ -220,6 +223,13 @@ FILTRES À APPLIQUER (mets action_required: "not_relevant") :
 - Firms hors-domaine quant/finance (random SaaS, biotech, retail, etc.).
 - Localisations US-only (le profil n'a pas de visa US).
 
+CATÉGORIES DE FIRMES (pour firm_category) :
+- "quant" : market making, HFT, prop trading, quant research, systematic (Jane Street, Optiver, IMC, HRT, Citadel Securities, D.E. Shaw, Two Sigma, AQR, XTX, DRW...)
+- "hedge_fund" : hedge funds non-quant ou multi-strategy (Brevan Howard, Schonfeld, Millennium, Man Group, Marshall Wace...)
+- "bulge_bracket" : grandes banques d'investissement (Goldman Sachs, JPMorgan, Morgan Stanley, Barclays, Deutsche Bank, UBS, BNP Paribas, HSBC...)
+- "asset_manager" : asset managers, private banking (BlackRock, State Street, Pictet, Partners Group, Lombard Odier, Vontobel...)
+- "other" : autres (insurance, fintech, consulting, etc.)
+
 Réponds UNIQUEMENT en JSON valide, sans markdown, sans backticks. Schéma :
 {{
   "opportunities": [
@@ -229,12 +239,15 @@ Réponds UNIQUEMENT en JSON valide, sans markdown, sans backticks. Schéma :
       "program_name": "Nom exact du programme/rôle",
       "deadline": "date ou période lisible" ou null,
       "deadline_iso": "YYYY-MM-DD si date concrète identifiable (au moins année+mois ; jour = 01 si manquant), sinon null",
+      "start_date": "date ou période de DÉBUT du stage/programme lisible (ex: 'Juin 2027', 'Été 2027', 'Septembre 2026')" ou null,
+      "start_date_iso": "YYYY-MM-DD si date de début identifiable (jour = 01 si manquant), sinon null",
       "location": "ville(s)" ou null,
       "eligibility": "critères clés" ou null,
       "format": "durée, in-person/remote, etc." ou null,
       "key_info": "QUOI préparer et QUAND, 2-3 phrases max" ou null,
       "apply_url": "URL directe de candidature si trouvée" ou null,
       "priority_score": entier 1-10,
+      "firm_category": "quant" | "hedge_fund" | "bulge_bracket" | "asset_manager" | "other",
       "pre_application": "lettre de motivation ~180 mots" ou null
     }}
   ],
