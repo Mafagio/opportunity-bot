@@ -29,7 +29,7 @@ STATE_FILE = Path("state/hashes.json")
 OPPORTUNITIES_FILE = Path("state/opportunities.json")
 PROFILE_FILE = Path("profile.md")
 FIRMS_FILE = Path("firms.yaml")
-CLAUDE_MODEL = "claude-sonnet-4-6"
+CLAUDE_MODEL = "claude-haiku-4-5-20251001"
 
 OPPORTUNITY_RETENTION_DAYS = 60
 
