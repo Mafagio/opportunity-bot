@@ -1,16 +1,26 @@
 name: Daily opportunity check
 
+# IMPORTANT — GitHub Actions cron schedules are "best effort" et peuvent être
+# retardés / skippés pendant les pics de charge. Pour minimiser le risque :
+#   1) Éviter les minutes rondes (:00) qui sont les pires (peak load).
+#   2) Lancer 2 fois par jour : si l'un est skippé, l'autre prend le relais.
+#   3) Pousser ce fichier resync les schedules chez GitHub si bloqués.
+#
+# Heures choisies :
+#   07:23 UTC = 08:23/09:23 Zurich → run du matin (catch les changements US overnight)
+#   15:23 UTC = 16:23/17:23 Zurich → run d'après-midi (catch les Google Alerts arrivées dans la journée)
+
 on:
   schedule:
-    # 06:00 UTC = 07:00 Zurich en hiver, 08:00 en été.
-    - cron: '0 6 * * *'
-  workflow_dispatch:  # Permet de lancer manuellement depuis l'onglet Actions
+    - cron: '23 7 * * *'
+    - cron: '23 15 * * *'
+  workflow_dispatch:
 
 jobs:
   check:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # Nécessaire pour commit le state et le site
+      contents: write
 
     steps:
       - name: Checkout repo
@@ -30,8 +40,6 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          # Optionnels — laisse vides ou ne définis pas les secrets si tu ne
-          # veux pas (encore) brancher le module email. Le bot détecte l'absence.
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
         run: python bot.py
@@ -44,6 +52,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "Aucun changement à committer."
           else
-            git commit -m "Update state and site $(date -u +%Y-%m-%d)"
+            git commit -m "Update state and site $(date -u +%Y-%m-%d-%H%M)"
             git push
           fi
