@@ -126,27 +126,6 @@
     "last_seen": "2026-05-19T20:28:47.145729+00:00"
   },
   {
-    "id": "7eee3f6b83ba7379",
-    "firm": "Optiver",
-    "program_name": "Expressions of Interest – Graduate Quantitative Trader 2027",
-    "deadline": null,
-    "deadline_iso": null,
-    "start_date": "2027",
-    "start_date_iso": "2027-01-01",
-    "location": "Sydney, Chicago",
-    "eligibility": "Graduate level, class of 2027; locations listed are Sydney and Chicago only",
-    "format": "Graduate full-time role; expression of interest phase (no formal application yet open)",
-    "key_info": "Il s'agit d'une expression d'intérêt pour un rôle graduate 2027, mais les localisations affichées sont Sydney et Chicago — non compatibles avec le profil (pas de visa US, pas de relocation Australie). À surveiller en cas d'ouverture d'un poste Londres/Amsterdam. Préparer dès maintenant : CV à jour, entraînement mental math/probabilités (style Optiver), et solution aux Optiver puzzles en ligne.",
-    "apply_url": "https://optiver.com/working-at-optiver/career-opportunities/8450282002/",
-    "priority_score": 4,
-    "firm_category": "quant",
-    "pre_application": null,
-    "action_required": "add_to_watchlist",
-    "source": "careers_page",
-    "first_seen": "2026-05-20T07:26:21.448118+00:00",
-    "last_seen": "2026-05-20T07:26:21.448118+00:00"
-  },
-  {
     "id": "ee7bafbdca207ada",
     "firm": "WorldQuant",
     "program_name": "Quantitative Research Internship (Off-Cycle) 2026",
@@ -544,5 +523,26 @@
     "source": "linkedin_alerts",
     "first_seen": "2026-05-20T08:17:44.435129+00:00",
     "last_seen": "2026-05-20T08:17:44.435129+00:00"
+  },
+  {
+    "id": "7eee3f6b83ba7379",
+    "firm": "Optiver",
+    "program_name": "Expressions of Interest – Graduate Quantitative Trader 2027",
+    "deadline": null,
+    "deadline_iso": null,
+    "start_date": "2027 (post-graduation timeline)",
+    "start_date_iso": "2027-01-01",
+    "location": "Sydney, Chicago",
+    "eligibility": "2027 graduates or final-year students",
+    "format": "Graduate full-time role, Quantitative Trading track",
+    "key_info": "Optiver targets 2027 graduates (aligns with your ETH Master completion). Prepare: tailored CV emphasizing Pictet 2nd place, IMC Prosperity Top 1%, factor-model research under Malamud, and leadership at Financial Association with industry speakers (Jane Street, Jump, HRT). Expected: online assessment (coding + quant math), interviews with traders/researchers. Location: Sydney/Chicago (non-EU); consider London office if available.",
+    "apply_url": "https://optiver.com/working-at-optiver/career-opportunities/8450282002/",
+    "priority_score": 7,
+    "firm_category": "quant",
+    "pre_application": "I am a final-year EPFL Bachelor (Mathematics) entering ETH Master in Applied Mathematics (2026–2028), with strong quantitative foundations in stochastic processes, Bayesian inference, and time series. My track record includes 2nd place at Pictet Group Quant Challenge (signal design, ensemble methods, direct presentation to Pictet AM), Top 1% (IMC Prosperity 4, algorithmic trading competition), and ongoing quantitative research under Prof. Semyon Malamud on multivariate GARCH and factor models for portfolio risk forecasting. I lead EPFL's Financial Association (45 members), organizing speakers from Jane Street, Jump Trading, and Hudson River Trading—directly exposing me to systematic trading workflows. Technical strengths: Python (NumPy, pandas, scikit-learn), C++, Monte Carlo methods, and optimization. My hybrid profile—rigorous mathematics plus applied finance experience—positions me well for Optiver's quant trading culture, where I aim to develop market-making and statistical arbitrage strategies.",
+    "action_required": "prepare_for_open",
+    "source": "careers_page",
+    "first_seen": "2026-05-20T07:26:21.448118+00:00",
+    "last_seen": "2026-05-20T12:52:38.863484+00:00"
   }
 ]
