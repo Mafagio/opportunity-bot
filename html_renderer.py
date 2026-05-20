@@ -77,6 +77,94 @@ CATEGORY_LABELS = {
 }
 
 
+# Mapping firme → domaine pour récupérer les logos via Clearbit
+# (https://logo.clearbit.com/{domain})
+FIRM_DOMAINS = {
+    # Quant HFT / Market Making
+    "Jane Street": "janestreet.com",
+    "Optiver": "optiver.com", "Optiver Europe": "optiver.com",
+    "IMC": "imc.com", "IMC Trading": "imc.com",
+    "Hudson River Trading": "hudsonrivertrading.com", "HRT": "hudsonrivertrading.com",
+    "Jump Trading": "jumptrading.com",
+    "DRW": "drw.com",
+    "Five Rings": "fiverings.com", "Five Rings Capital": "fiverings.com",
+    "SIG": "sig.com", "Susquehanna": "sig.com", "SIG (Susquehanna)": "sig.com",
+    "XTX": "xtxmarkets.com", "XTX Markets": "xtxmarkets.com",
+    "Tower Research": "tower-research.com", "Tower Research Capital": "tower-research.com",
+    "Akuna": "akunacapital.com", "Akuna Capital": "akunacapital.com",
+    "Old Mission Capital": "oldmissioncapital.com",
+    "Tibra Capital": "tibra.com",
+    "Citadel Securities": "citadelsecurities.com",
+    "Citadel": "citadel.com",
+    "Flow Traders": "flowtraders.com",
+    "Da Vinci Trading": "davincitrading.com",
+    "Maven Securities": "mavensecurities.com",
+    "Vatic Investments": "vaticinvestments.com",
+    "Wincent": "wincent.io",
+    "DV Trading": "dvtrading.co",
+    "Keyrock": "keyrock.com",
+    # Quant Research
+    "D.E. Shaw": "deshaw.com",
+    "Two Sigma": "twosigma.com",
+    "G-Research": "gresearch.com",
+    "WorldQuant": "worldquant.com",
+    "AQR": "aqr.com", "AQR Capital": "aqr.com",
+    "Marshall Wace": "mwam.com",
+    "Capula Investment Management": "capula.com",
+    "Quadrature Capital": "quadraturecapital.com",
+    "GSA Capital": "gsacapital.com",
+    "Trexquant": "trexquant.com",
+    "Squarepoint Capital": "squarepoint-capital.com",
+    "Verition Fund Management": "veritionfund.com",
+    "The Voleon Group": "voleon.com", "Voleon": "voleon.com",
+    # Hedge funds
+    "Schonfeld": "schonfeld.com",
+    "Brevan Howard": "brevanhoward.com",
+    "Man Group": "man.com",
+    "Millennium": "mlp.com",
+    "BlueCrest Capital": "bluecrestcapital.com",
+    "Lansdowne Partners": "lansdownepartners.com",
+    "Hartree Partners": "hartreepartners.com",
+    # Bulge brackets
+    "Goldman Sachs": "goldmansachs.com",
+    "Goldman Sachs (Students)": "goldmansachs.com",
+    "JPMorgan": "jpmorgan.com", "JPMorgan (Students)": "jpmorgan.com", "JP Morgan": "jpmorgan.com",
+    "Morgan Stanley": "morganstanley.com",
+    "Barclays": "barclays.com",
+    "Deutsche Bank": "db.com",
+    "BNP Paribas": "bnpparibas.com",
+    "Nomura": "nomura.com",
+    "Macquarie": "macquarie.com",
+    "UBS": "ubs.com",
+    "HSBC": "hsbc.com",
+    "Citi": "citi.com", "Citigroup": "citi.com",
+    "Bank of America": "bofa.com", "BofA": "bofa.com",
+    "Societe Generale": "societegenerale.com",
+    # Asset managers
+    "BlackRock": "blackrock.com",
+    "State Street": "statestreet.com",
+    "State Street Global Advisors": "ssga.com",
+    "Vanguard": "vanguard.com",
+    "PIMCO": "pimco.com",
+    "Pictet": "pictet.com", "Pictet Asset Management": "pictet.com",
+    "Partners Group": "partnersgroup.com",
+    "Vontobel": "vontobel.com",
+    "Lombard Odier": "lombardodier.com",
+    "Julius Baer": "juliusbaer.com",
+    # Other
+    "Swiss Re": "swissre.com",
+    "Zurich Insurance": "zurich.com", "Zurich Insurance Group": "zurich.com",
+    "Banque Heritage": "heritage.ch",
+}
+
+
+def get_firm_domain(firm):
+    """Retourne le domaine pour Clearbit, ou None pour fallback initials."""
+    if not firm:
+        return None
+    return FIRM_DOMAINS.get(firm)
+
+
 def get_category(opp):
     """Récupère la catégorie d'une opportunité (Claude > fallback dict > 'other')."""
     cat = opp.get("firm_category")
@@ -93,9 +181,11 @@ def normalize_opportunities(opps):
     out = []
     for o in opps:
         cat = get_category(o)
+        firm = o.get("firm") or "?"
         out.append({
             "id": o.get("id", ""),
-            "firm": o.get("firm") or "?",
+            "firm": firm,
+            "firm_domain": get_firm_domain(firm),
             "program_name": o.get("program_name"),
             "deadline": o.get("deadline"),
             "deadline_iso": o.get("deadline_iso"),
@@ -154,6 +244,20 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   --accent: #f5f5f5;
   --radius: 10px;
   --radius-lg: 14px;
+  /* Catégories — couleurs distinctives mais sobres */
+  --cat-quant: #06b6d4;          /* cyan */
+  --cat-quant-soft: rgba(6, 182, 212, 0.14);
+  --cat-hedge: #a855f7;          /* purple */
+  --cat-hedge-soft: rgba(168, 85, 247, 0.14);
+  --cat-bulge: #eab308;          /* gold */
+  --cat-bulge-soft: rgba(234, 179, 8, 0.14);
+  --cat-asset: #ec4899;          /* pink */
+  --cat-asset-soft: rgba(236, 72, 153, 0.14);
+  --cat-other: #94a3b8;          /* slate */
+  --cat-other-soft: rgba(148, 163, 184, 0.14);
+  /* Texte "non vu" — légèrement plus brillant et bleuté */
+  --text-unseen: #ffffff;
+  --unseen-marker: #60a5fa;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -391,10 +495,10 @@ main {
 /* ============ EXPLORER : ligne d'opportunité ============ */
 .opp-row {
   display: grid;
-  grid-template-columns: 56px 1fr auto auto;
+  grid-template-columns: 10px 50px 36px 1fr auto auto;
   align-items: center;
-  gap: 16px;
-  padding: 14px 4px 14px 4px;
+  gap: 14px;
+  padding: 14px 4px;
   border-bottom: 1px solid var(--border-subtle);
   cursor: pointer;
   transition: background 0.12s;
@@ -403,6 +507,19 @@ main {
 .opp-row:hover { background: var(--bg-1); }
 
 .opp-row:last-child { border-bottom: none; }
+
+/* Dot "non vu" (caché si vu) */
+.opp-unseen {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--unseen-marker);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.12);
+  justify-self: center;
+}
+.opp-row.seen .opp-unseen {
+  background: transparent;
+  box-shadow: none;
+}
 
 .opp-date {
   text-align: center;
@@ -429,18 +546,61 @@ main {
 .opp-date.green .opp-date-day { color: var(--green); }
 .opp-date.gray .opp-date-day { color: var(--text-3); }
 
+/* Firm logo (Clearbit) ou fallback initiales coloré par catégorie */
+.firm-logo {
+  width: 32px; height: 32px;
+  border-radius: 6px;
+  background: var(--bg-2);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--border-subtle);
+}
+.firm-logo img {
+  width: 100%; height: 100%; object-fit: contain;
+  background: #fff;  /* la plupart des logos Clearbit ont besoin d'un fond blanc */
+}
+.firm-logo.cat-quant         { background: var(--cat-quant-soft); color: var(--cat-quant); border-color: var(--cat-quant-soft); }
+.firm-logo.cat-hedge_fund    { background: var(--cat-hedge-soft); color: var(--cat-hedge); border-color: var(--cat-hedge-soft); }
+.firm-logo.cat-bulge_bracket { background: var(--cat-bulge-soft); color: var(--cat-bulge); border-color: var(--cat-bulge-soft); }
+.firm-logo.cat-asset_manager { background: var(--cat-asset-soft); color: var(--cat-asset); border-color: var(--cat-asset-soft); }
+.firm-logo.cat-other         { background: var(--cat-other-soft); color: var(--cat-other); border-color: var(--cat-other-soft); }
+
 .opp-main { min-width: 0; }
 
 .opp-firm {
   font-size: 15px;
   font-weight: 600;
-  color: var(--text-1);
+  color: var(--text-2);
   letter-spacing: -0.01em;
   margin-bottom: 2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: flex; align-items: center; gap: 8px;
 }
+.opp-row.unseen .opp-firm { color: var(--text-unseen); font-weight: 650; }
+
+/* Pastille catégorie inline */
+.cat-pill {
+  display: inline-flex; align-items: center;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  font-family: 'Geist Mono', monospace;
+  flex-shrink: 0;
+}
+.cat-pill.cat-quant         { background: var(--cat-quant-soft); color: var(--cat-quant); }
+.cat-pill.cat-hedge_fund    { background: var(--cat-hedge-soft); color: var(--cat-hedge); }
+.cat-pill.cat-bulge_bracket { background: var(--cat-bulge-soft); color: var(--cat-bulge); }
+.cat-pill.cat-asset_manager { background: var(--cat-asset-soft); color: var(--cat-asset); }
+.cat-pill.cat-other         { background: var(--cat-other-soft); color: var(--cat-other); }
 
 .opp-meta {
   font-size: 13px;
@@ -449,18 +609,47 @@ main {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.opp-row.unseen .opp-meta { color: var(--text-2); }
 
+/* Ligne supplémentaire pour start_date / detected */
+.opp-meta-extra {
+  font-size: 12px;
+  color: var(--text-4);
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'Geist Mono', monospace;
+}
+.opp-meta-extra .sep { opacity: 0.5; margin: 0 6px; }
+.opp-meta-extra .start { color: var(--blue); }
+.opp-meta-extra .detected { color: var(--text-4); }
+
+.opp-dleft-wrap {
+  text-align: right;
+}
 .opp-dleft {
   font-family: 'Geist Mono', monospace;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 5px;
 }
-.opp-dleft.red { color: var(--red); }
-.opp-dleft.orange { color: var(--orange); }
-.opp-dleft.green { color: var(--green); }
-.opp-dleft.gray { color: var(--text-4); }
+.opp-dleft.red    { color: var(--red);    background: var(--red-soft); }
+.opp-dleft.orange { color: var(--orange); background: var(--orange-soft); }
+.opp-dleft.green  { color: var(--green);  background: var(--green-soft); }
+.opp-dleft.gray   { color: var(--text-3); background: var(--bg-3); }
+
+.opp-dleft-friendly {
+  display: block;
+  font-size: 10px;
+  color: var(--text-4);
+  margin-top: 3px;
+  font-family: 'Geist Mono', monospace;
+}
 
 .opp-bookmark {
   width: 32px; height: 32px;
@@ -604,6 +793,8 @@ main {
   overflow: hidden;
 }
 .fav-card:hover { background: var(--bg-2); border-color: var(--border); }
+.fav-card.unseen { background: rgba(59, 130, 246, 0.04); border-color: rgba(96, 165, 250, 0.15); }
+.fav-card.unseen:hover { background: rgba(59, 130, 246, 0.07); }
 
 .fav-card::before {
   content: '';
@@ -616,22 +807,40 @@ main {
 .fav-card.urgency-orange::before { background: var(--orange); }
 .fav-card.urgency-green::before { background: var(--green); }
 
+.fav-card-top {
+  display: flex; align-items: flex-start; gap: 12px;
+}
+
 .fav-card-header {
   display: flex; align-items: flex-start; justify-content: space-between;
   gap: 16px;
+  flex: 1; min-width: 0;
 }
 
 .fav-card-firm {
   font-size: 16px;
   font-weight: 600;
+  color: var(--text-2);
   letter-spacing: -0.01em;
   margin-bottom: 4px;
+  display: flex; align-items: center; gap: 8px;
 }
+.fav-card.unseen .fav-card-firm { color: var(--text-unseen); font-weight: 650; }
 
 .fav-card-program {
   font-size: 13px;
   color: var(--text-3);
 }
+.fav-card.unseen .fav-card-program { color: var(--text-2); }
+
+.fav-card-dates {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-4);
+  font-family: 'Geist Mono', monospace;
+}
+.fav-card-dates .sep { opacity: 0.5; margin: 0 6px; }
+.fav-card-dates .start { color: var(--blue); }
 
 .fav-card-badge {
   display: inline-flex; align-items: center; gap: 6px;
@@ -737,6 +946,18 @@ main {
   margin-bottom: 20px;
 }
 
+.modal-logo-row {
+  display: flex; align-items: flex-start; gap: 14px;
+  margin-bottom: 20px;
+}
+.modal-logo-row .firm-logo {
+  width: 48px; height: 48px;
+  font-size: 15px;
+}
+.modal-firm-block { flex: 1; min-width: 0; }
+.modal-firm-block .modal-firm { margin-bottom: 4px; }
+.modal-firm-block .modal-program { margin-bottom: 0; }
+
 .modal-meta-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -750,6 +971,21 @@ main {
 .modal-meta-item {
   font-size: 13px;
 }
+.modal-meta-item.accent .modal-meta-value {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  font-family: 'Geist Mono', monospace;
+}
+.modal-meta-item.accent.cat-quant         .modal-meta-value { background: var(--cat-quant-soft); color: var(--cat-quant); }
+.modal-meta-item.accent.cat-hedge_fund    .modal-meta-value { background: var(--cat-hedge-soft); color: var(--cat-hedge); }
+.modal-meta-item.accent.cat-bulge_bracket .modal-meta-value { background: var(--cat-bulge-soft); color: var(--cat-bulge); }
+.modal-meta-item.accent.cat-asset_manager .modal-meta-value { background: var(--cat-asset-soft); color: var(--cat-asset); }
+.modal-meta-item.accent.cat-other         .modal-meta-value { background: var(--cat-other-soft); color: var(--cat-other); }
 .modal-meta-label {
   color: var(--text-3);
   font-size: 11px;
@@ -853,9 +1089,11 @@ main {
   .topnav-tab .tab-icon { display: none; }
   main { padding: 24px 16px 60px; }
   .view-title { font-size: 22px; }
-  .opp-row { grid-template-columns: 48px 1fr auto; gap: 12px; padding: 12px 0; }
+  .opp-row { grid-template-columns: 8px 44px 30px 1fr auto; gap: 10px; padding: 12px 0; }
   .opp-bookmark { display: none; }
-  .cand-table-header,
+  .firm-logo { width: 28px; height: 28px; }
+  .opp-meta-extra { font-size: 11px; }
+  .cat-table-header,
   .cand-row { grid-template-columns: 1fr; gap: 8px; padding: 14px 4px; }
   .cand-table-header { display: none; }
   .pipeline { width: 100%; max-width: none; }
@@ -977,6 +1215,7 @@ const STAGES = [
 // ============================================================
 const LS_FAV = "qt_favorites_v1";
 const LS_CAND = "qt_candidatures_v1";
+const LS_SEEN = "qt_seen_v1";
 
 function getFavorites() {
   try { return JSON.parse(localStorage.getItem(LS_FAV) || "[]"); }
@@ -1014,6 +1253,21 @@ function setCandidatureStage(id, stage) {
     c[id] = stage;
   }
   setCandidatures(c);
+}
+
+function getSeen() {
+  try { return new Set(JSON.parse(localStorage.getItem(LS_SEEN) || "[]")); }
+  catch { return new Set(); }
+}
+function isSeen(id) {
+  return getSeen().has(id);
+}
+function markSeen(id) {
+  const s = getSeen();
+  if (s.has(id)) return false;
+  s.add(id);
+  localStorage.setItem(LS_SEEN, JSON.stringify([...s]));
+  return true;
 }
 
 // ============================================================
@@ -1067,6 +1321,63 @@ function formatFriendlyDate(iso) {
   const d = parseISO(iso);
   if (!d) return "—";
   return d.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+}
+
+function formatShortMonth(iso) {
+  // Pour start_date qui est souvent imprécis : "juin 2027" plutôt que "1 juin 2027"
+  const d = parseISO(iso);
+  if (!d) return "—";
+  return d.toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+}
+
+/* Relative time : "dans 10 jours", "dans 2 semaines", "dans ~6 mois", "il y a 3 jours" */
+function relativeTime(iso, opts) {
+  opts = opts || {};
+  const d = parseISO(iso);
+  if (!d) return "";
+  const now = new Date(); now.setHours(0, 0, 0, 0);
+  const t = new Date(d); t.setHours(0, 0, 0, 0);
+  const diffDays = Math.round((t - now) / 86400000);
+  const abs = Math.abs(diffDays);
+  const past = diffDays < 0;
+  let txt;
+  if (abs === 0) txt = "aujourd'hui";
+  else if (abs === 1) txt = past ? "hier" : "demain";
+  else if (abs < 14) txt = past ? `il y a ${abs} jours` : `dans ${abs} jours`;
+  else if (abs < 60) {
+    const w = Math.round(abs / 7);
+    txt = past ? `il y a ${w} semaines` : `dans ${w} semaines`;
+  } else if (abs < 365) {
+    const m = Math.round(abs / 30);
+    txt = past ? `il y a ~${m} mois` : `dans ~${m} mois`;
+  } else {
+    const y = (abs / 365).toFixed(1).replace(".0", "");
+    txt = past ? `il y a ~${y} an${y > 1 ? "s" : ""}` : `dans ~${y} an${y > 1 ? "s" : ""}`;
+  }
+  return txt;
+}
+
+/* Logo HTML : tag <img> Clearbit avec fallback initiales colorées par catégorie */
+function logoHTML(opp) {
+  const cls = "firm-logo cat-" + (opp.firm_category || "other");
+  if (opp.firm_domain) {
+    // Image avec fallback onerror vers initiales
+    const initials = getInitials(opp.firm);
+    return `<div class="${cls}">
+      <img src="https://logo.clearbit.com/${opp.firm_domain}" alt=""
+           onerror="this.style.display='none';this.parentElement.textContent='${esc(initials)}'">
+    </div>`;
+  }
+  return `<div class="${cls}">${esc(getInitials(opp.firm))}</div>`;
+}
+
+function getInitials(firm) {
+  if (!firm) return "?";
+  // "Jane Street" → "JS", "Goldman Sachs (Students)" → "GS"
+  const cleaned = firm.replace(/\([^)]*\)/g, "").trim();
+  const parts = cleaned.split(/\s+/).filter(Boolean);
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
 // ============================================================
@@ -1175,7 +1486,8 @@ function renderExplorer() {
 
 function buildOppRow(o) {
   const row = document.createElement("div");
-  row.className = "opp-row";
+  const seen = isSeen(o.id);
+  row.className = "opp-row " + (seen ? "seen" : "unseen");
 
   const badge = formatDateBadge(o.deadline_iso);
   const urgency = urgencyClass(o.deadline_iso);
@@ -1195,13 +1507,39 @@ function buildOppRow(o) {
 
   const meta = [o.program_name, o.location].filter(Boolean).join(" · ") || "—";
 
+  // 3e ligne meta-extra : début + détecté
+  const extras = [];
+  if (o.start_date_iso || o.start_date) {
+    const startTxt = o.start_date || formatShortMonth(o.start_date_iso);
+    const rel = o.start_date_iso ? " (" + relativeTime(o.start_date_iso) + ")" : "";
+    extras.push(`<span class="start">→ Début : ${esc(startTxt)}${esc(rel)}</span>`);
+  }
+  if (o.first_seen) {
+    extras.push(`<span class="detected">détecté ${esc(relativeTime(o.first_seen))}</span>`);
+  }
+  const extraHtml = extras.length
+    ? `<div class="opp-meta-extra">${extras.join('<span class="sep">·</span>')}</div>`
+    : "";
+
+  // J-N avec date friendly en dessous
+  let friendlyDeadline = "";
+  if (o.deadline_iso) {
+    friendlyDeadline = `<div class="opp-dleft-friendly">${esc(relativeTime(o.deadline_iso))}</div>`;
+  }
+
   row.innerHTML = `
+    <div class="opp-unseen"></div>
     ${dateHtml}
+    ${logoHTML(o)}
     <div class="opp-main">
-      <div class="opp-firm">${esc(o.firm)}</div>
+      <div class="opp-firm">${esc(o.firm)}<span class="cat-pill cat-${esc(o.firm_category)}">${esc(o.firm_category_label || "")}</span></div>
       <div class="opp-meta">${esc(meta)}</div>
+      ${extraHtml}
     </div>
-    <div class="opp-dleft ${urgency}">${dleftText}</div>
+    <div class="opp-dleft-wrap">
+      <span class="opp-dleft ${urgency}">${dleftText}</span>
+      ${friendlyDeadline}
+    </div>
     <button class="opp-bookmark ${fav ? "active" : ""}" data-id="${o.id}" title="${fav ? "Retirer des favoris" : "Ajouter aux favoris"}">
       ${fav ? "★" : "☆"}
     </button>
@@ -1369,7 +1707,8 @@ function renderFavoris() {
   sorted.forEach(o => {
     const card = document.createElement("div");
     const urg = urgencyClass(o.deadline_iso);
-    card.className = "fav-card urgency-" + urg;
+    const seen = isSeen(o.id);
+    card.className = "fav-card urgency-" + urg + (seen ? "" : " unseen");
 
     const days = daysUntil(o.deadline_iso);
     let badgeText, badgeCls;
@@ -1380,13 +1719,33 @@ function renderFavoris() {
 
     const meta = [o.program_name, o.location].filter(Boolean).join(" · ") || "—";
 
+    // Dates explicites
+    const dateParts = [];
+    if (o.deadline_iso) {
+      dateParts.push(`Postuler d'ici le ${esc(formatFriendlyDate(o.deadline_iso))} (${esc(relativeTime(o.deadline_iso))})`);
+    } else if (o.deadline) {
+      dateParts.push(`Postuler : ${esc(o.deadline)}`);
+    }
+    if (o.start_date_iso || o.start_date) {
+      const startTxt = o.start_date || formatShortMonth(o.start_date_iso);
+      const rel = o.start_date_iso ? " (" + relativeTime(o.start_date_iso) + ")" : "";
+      dateParts.push(`<span class="start">→ Début : ${esc(startTxt)}${esc(rel)}</span>`);
+    }
+    const datesHtml = dateParts.length
+      ? `<div class="fav-card-dates">${dateParts.join('<span class="sep">·</span>')}</div>`
+      : "";
+
     card.innerHTML = `
-      <div class="fav-card-header">
-        <div>
-          <div class="fav-card-firm">${esc(o.firm)}</div>
-          <div class="fav-card-program">${esc(meta)}</div>
+      <div class="fav-card-top">
+        ${logoHTML(o)}
+        <div class="fav-card-header">
+          <div>
+            <div class="fav-card-firm">${esc(o.firm)}<span class="cat-pill cat-${esc(o.firm_category)}">${esc(o.firm_category_label || "")}</span></div>
+            <div class="fav-card-program">${esc(meta)}</div>
+            ${datesHtml}
+          </div>
+          <div class="fav-card-badge ${badgeCls}">${esc(badgeText)}</div>
         </div>
-        <div class="fav-card-badge ${badgeCls}">${esc(badgeText)}</div>
       </div>
       <div class="fav-card-actions">
         <button class="btn-primary" data-action="apply">✓ Marquer comme postulé</button>
@@ -1419,27 +1778,50 @@ function openDetail(id) {
   const o = OPPS.find(x => x.id === id);
   if (!o) return;
 
+  // Marquer comme vu (avec re-render différé pour ne pas casser le DOM en cours)
+  const wasUnseen = markSeen(id);
+
   const body = document.getElementById("modal-body");
   const stage = getCandidatureStage(id);
   const fav = isFavorite(id);
 
+  // Dates explicites avec relative time
+  let deadlineDisp = "—";
+  if (o.deadline_iso) {
+    deadlineDisp = formatFriendlyDate(o.deadline_iso) + " · " + relativeTime(o.deadline_iso);
+  } else if (o.deadline) {
+    deadlineDisp = o.deadline;
+  }
+  let startDisp = "—";
+  if (o.start_date_iso) {
+    startDisp = formatShortMonth(o.start_date_iso) + " · " + relativeTime(o.start_date_iso);
+  } else if (o.start_date) {
+    startDisp = o.start_date;
+  }
+  const detectedDisp = o.first_seen
+    ? formatFriendlyDate(o.first_seen) + " · " + relativeTime(o.first_seen)
+    : "—";
+
   const meta = [
-    { label: "Catégorie",     value: o.firm_category_label },
+    { label: "Catégorie",     value: o.firm_category_label, accent: true },
     { label: "Localisation",  value: o.location },
-    { label: "Deadline",      value: o.deadline_iso ? formatFriendlyDate(o.deadline_iso) : (o.deadline || "—") },
-    { label: "Début",         value: o.start_date_iso ? formatFriendlyDate(o.start_date_iso) : (o.start_date || "—") },
-    { label: "Détecté le",    value: o.first_seen ? formatFriendlyDate(o.first_seen) : "—" },
+    { label: "Deadline",      value: deadlineDisp },
+    { label: "Début du stage", value: startDisp },
+    { label: "Détecté",       value: detectedDisp },
     { label: "Score",         value: (o.priority_score || "—") + "/10" },
     { label: "Éligibilité",   value: o.eligibility },
     { label: "Format",        value: o.format },
-  ].filter(m => m.value);
+  ].filter(m => m.value && m.value !== "—" || ["Deadline", "Début du stage", "Détecté"].includes(m.label));
 
-  let html = `
+  let logoBlock = `<div class="modal-logo-row">${logoHTML(o)}<div class="modal-firm-block">
     <div class="modal-firm">${esc(o.firm)}</div>
     <div class="modal-program">${esc(o.program_name || "")}</div>
+  </div></div>`;
+
+  let html = logoBlock + `
     <div class="modal-meta-grid">
       ${meta.map(m => `
-        <div class="modal-meta-item">
+        <div class="modal-meta-item${m.accent ? " accent cat-" + esc(o.firm_category) : ""}">
           <div class="modal-meta-label">${esc(m.label)}</div>
           <div class="modal-meta-value">${esc(m.value)}</div>
         </div>
@@ -1531,6 +1913,9 @@ function openDetail(id) {
   }
 
   document.getElementById("modal-backdrop").classList.add("open");
+
+  // Re-render listes en arrière-plan pour appliquer le seen
+  if (wasUnseen) renderAll();
 }
 
 function closeModal() {
