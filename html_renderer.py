@@ -219,6 +219,15 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+// Restore theme before render to prevent flash
+(function() {
+  try {
+    var t = localStorage.getItem("qt_theme_v1");
+    if (t === "light") document.documentElement.setAttribute("data-theme", "light");
+  } catch (e) {}
+})();
+</script>
 <style>
 :root {
   --bg-0: #0a0a0a;
@@ -258,6 +267,43 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   /* Texte "non vu" — légèrement plus brillant et bleuté */
   --text-unseen: #ffffff;
   --unseen-marker: #60a5fa;
+}
+
+/* === LIGHT MODE === */
+:root[data-theme="light"] {
+  --bg-0: #ffffff;
+  --bg-1: #fafafa;
+  --bg-2: #f4f4f5;
+  --bg-3: #e7e7e9;
+  --bg-hover: #ededed;
+  --border-subtle: #ececec;
+  --border: #e0e0e0;
+  --border-strong: #cccccc;
+  --text-1: #0a0a0a;
+  --text-2: #525252;
+  --text-3: #737373;
+  --text-4: #a3a3a3;
+  --red: #dc2626;
+  --red-soft: rgba(220, 38, 38, 0.10);
+  --orange: #d97706;
+  --orange-soft: rgba(217, 119, 6, 0.10);
+  --green: #16a34a;
+  --green-soft: rgba(22, 163, 74, 0.10);
+  --blue: #2563eb;
+  --blue-soft: rgba(37, 99, 235, 0.10);
+  --accent: #0a0a0a;
+  --cat-quant: #0891b2;
+  --cat-quant-soft: rgba(8, 145, 178, 0.10);
+  --cat-hedge: #9333ea;
+  --cat-hedge-soft: rgba(147, 51, 234, 0.10);
+  --cat-bulge: #b45309;
+  --cat-bulge-soft: rgba(180, 83, 9, 0.10);
+  --cat-asset: #db2777;
+  --cat-asset-soft: rgba(219, 39, 119, 0.10);
+  --cat-other: #64748b;
+  --cat-other-soft: rgba(100, 116, 139, 0.10);
+  --text-unseen: #0a0a0a;
+  --unseen-marker: #2563eb;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -376,6 +422,13 @@ a { color: inherit; text-decoration: none; }
   transition: background 0.15s, color 0.15s;
 }
 .topnav-icon-btn:hover { background: var(--bg-2); color: var(--text-1); }
+.topnav-icon-btn svg { width: 16px; height: 16px; }
+
+/* Le toggle theme : on affiche soleil OU lune selon le mode */
+.theme-toggle .icon-sun { display: none; }
+.theme-toggle .icon-moon { display: block; }
+:root[data-theme="light"] .theme-toggle .icon-sun { display: block; }
+:root[data-theme="light"] .theme-toggle .icon-moon { display: none; }
 
 .topnav-avatar {
   width: 36px; height: 36px;
@@ -508,17 +561,45 @@ main {
 
 .opp-row:last-child { border-bottom: none; }
 
-/* Dot "non vu" (caché si vu) */
+/* Dot "non vu" + indicateur fort */
 .opp-unseen {
   width: 8px; height: 8px;
   border-radius: 50%;
   background: var(--unseen-marker);
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.12);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.18);
   justify-self: center;
+  transition: opacity 0.2s, background 0.2s;
 }
 .opp-row.seen .opp-unseen {
   background: transparent;
   box-shadow: none;
+}
+
+/* Vu = fade vers ~55% d'opacité sur tout sauf le bookmark */
+.opp-row.seen .opp-date,
+.opp-row.seen .firm-logo,
+.opp-row.seen .opp-main,
+.opp-row.seen .opp-dleft-wrap {
+  opacity: 0.55;
+}
+.opp-row.seen:hover .opp-date,
+.opp-row.seen:hover .firm-logo,
+.opp-row.seen:hover .opp-main,
+.opp-row.seen:hover .opp-dleft-wrap {
+  opacity: 0.85;
+}
+
+/* Bordure latérale bleue sur les non-vues */
+.opp-row.unseen {
+  position: relative;
+}
+.opp-row.unseen::before {
+  content: '';
+  position: absolute;
+  left: -8px; top: 6px; bottom: 6px;
+  width: 3px;
+  background: var(--unseen-marker);
+  border-radius: 2px;
 }
 
 .opp-date {
@@ -622,7 +703,7 @@ main {
   font-family: 'Geist Mono', monospace;
 }
 .opp-meta-extra .sep { opacity: 0.5; margin: 0 6px; }
-.opp-meta-extra .start { color: var(--blue); }
+.opp-meta-extra .start { color: var(--text-3); }
 .opp-meta-extra .detected { color: var(--text-4); }
 
 .opp-dleft-wrap {
@@ -793,8 +874,21 @@ main {
   overflow: hidden;
 }
 .fav-card:hover { background: var(--bg-2); border-color: var(--border); }
-.fav-card.unseen { background: rgba(59, 130, 246, 0.04); border-color: rgba(96, 165, 250, 0.15); }
-.fav-card.unseen:hover { background: rgba(59, 130, 246, 0.07); }
+.fav-card.unseen { background: rgba(59, 130, 246, 0.06); border-color: rgba(96, 165, 250, 0.22); }
+.fav-card.unseen:hover { background: rgba(59, 130, 246, 0.10); }
+/* Vu : opacité réduite, l'effet "déjà lu" */
+.fav-card:not(.unseen) .fav-card-firm,
+.fav-card:not(.unseen) .fav-card-program,
+.fav-card:not(.unseen) .fav-card-dates,
+.fav-card:not(.unseen) .firm-logo {
+  opacity: 0.6;
+}
+.fav-card:not(.unseen):hover .fav-card-firm,
+.fav-card:not(.unseen):hover .fav-card-program,
+.fav-card:not(.unseen):hover .fav-card-dates,
+.fav-card:not(.unseen):hover .firm-logo {
+  opacity: 0.95;
+}
 
 .fav-card::before {
   content: '';
@@ -840,7 +934,7 @@ main {
   font-family: 'Geist Mono', monospace;
 }
 .fav-card-dates .sep { opacity: 0.5; margin: 0 6px; }
-.fav-card-dates .start { color: var(--blue); }
+.fav-card-dates .start { color: var(--text-3); }
 
 .fav-card-badge {
   display: inline-flex; align-items: center; gap: 6px;
@@ -1126,6 +1220,10 @@ main {
     </button>
   </nav>
   <div class="topnav-right">
+    <button class="topnav-icon-btn theme-toggle" id="theme-toggle" title="Changer de thème" aria-label="Changer de thème">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    </button>
     <div class="topnav-avatar">MG</div>
   </div>
 </header>
@@ -1268,6 +1366,22 @@ function markSeen(id) {
   s.add(id);
   localStorage.setItem(LS_SEEN, JSON.stringify([...s]));
   return true;
+}
+
+const LS_THEME = "qt_theme_v1";
+function getTheme() {
+  return localStorage.getItem(LS_THEME) || "dark";
+}
+function setTheme(theme) {
+  if (theme === "light") {
+    document.documentElement.setAttribute("data-theme", "light");
+  } else {
+    document.documentElement.removeAttribute("data-theme");
+  }
+  localStorage.setItem(LS_THEME, theme);
+}
+function toggleTheme() {
+  setTheme(getTheme() === "light" ? "dark" : "light");
 }
 
 // ============================================================
@@ -1962,6 +2076,13 @@ function renderAll() {
 // INIT
 // ============================================================
 document.addEventListener("DOMContentLoaded", () => {
+  // Restore theme ASAP (FOUC mitigation)
+  setTheme(getTheme());
+
+  // Theme toggle
+  const themeBtn = document.getElementById("theme-toggle");
+  if (themeBtn) themeBtn.addEventListener("click", toggleTheme);
+
   // Set footer
   if (GENERATED_AT) {
     document.getElementById("footer-updated").textContent = formatFriendlyDate(GENERATED_AT);
