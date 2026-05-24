@@ -964,5 +964,26 @@
     "source": "linkedin_alerts",
     "first_seen": "2026-05-20T08:15:58.645579+00:00",
     "last_seen": "2026-05-24T09:28:49.020666+00:00"
+  },
+  {
+    "id": "b9eb47b439887eb6",
+    "firm": "Hunter Bond (Recruiter for Undisclosed Quant Firm)",
+    "program_name": "Graduate Software Engineer / Quant Developer / Quant Researcher",
+    "deadline": "Not specified - assume rolling applications",
+    "deadline_iso": null,
+    "start_date": "Not specified (likely 2026-2027)",
+    "start_date_iso": null,
+    "location": "London and surrounding area, UK",
+    "eligibility": "Recent graduate or final-year student (Bachelor/Master); strong programming background; quantitative/mathematical foundation preferred",
+    "format": "Full-time graduate role; likely 2-3 months onboarding + permanent position",
+    "key_info": "Prepare CV highlighting Python/C++ systems work, Pictet Quant Challenge 2nd place, IMC Prosperity Top 1%, factor model research with Prof. Malamud, and TA experience. Expect HackerRank/Codility coding assessment (C++/Python optimisation), technical interview on stochastic processes & portfolio theory, and possibly math puzzle round. Target application within 2 weeks.",
+    "apply_url": "https://www.linkedin.com/comm/jobs/view/4414336292/",
+    "priority_score": 8,
+    "firm_category": "quant",
+    "pre_application": "Dear Hiring Team,\n\nI am Matteo Giori, a final-year EPFL Mathematics student (graduating July 2026) entering an MSc in Applied Mathematics at ETH Zürich (September 2026). My profile uniquely combines rigorous quantitative foundations with hands-on quant finance experience.\n\nKey strengths:\n• Pictet Group Quant Challenge 2nd place (2025): designed and backtested predictive signals using PCA, ridge regression, and ensemble methods on real market data, presented directly to Pictet Asset Management.\n• IMC Prosperity 4 Top 150 worldwide (Top 1%): deployed systematic trading strategies (market making, statistical arbitrage, pricing) in live algorithmic competition.\n• Quantitative Research under Prof. Semyon Malamud (MSc Financial Engineering director): developed multivariate GARCH and factor-model approaches for covariance estimation and portfolio risk forecasting with Python backtesting pipelines.\n• Exceptional quantitative foundation: 6/6 in Statistics, top marks in Bayesian Statistics; expert in stochastic processes, probability, and continuous optimisation (MATLAB trust region algorithms).\n• Technical depth: Python (NumPy, pandas, scikit-learn), C++ (gas simulation, systems), MATLAB, strong numerical analysis background.\n• Leadership: President, Financial Association EPFL; organised speakers from Jane Street, Jump Trading, Hudson River Trading; built Quantitative Research Fund.\n\nI am deeply motivated by systematic trading and quant systems development. Available for summer 2027 internship or immediate graduate entry. Excited to contribute to your team.\n\nBest regards,\nMatteo Giori",
+    "action_required": "apply_now",
+    "source": "linkedin_alerts",
+    "first_seen": "2026-05-24T16:31:44.352150+00:00",
+    "last_seen": "2026-05-24T16:31:44.352150+00:00"
   }
 ]
