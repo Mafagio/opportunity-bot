@@ -985,5 +985,26 @@
     "source": "linkedin_alerts",
     "first_seen": "2026-05-24T16:31:44.352150+00:00",
     "last_seen": "2026-05-24T16:31:44.352150+00:00"
+  },
+  {
+    "id": "8086910416e2e80a",
+    "firm": "Julius Baer",
+    "program_name": "Intern - Treasury Risk",
+    "deadline": null,
+    "deadline_iso": null,
+    "start_date": null,
+    "start_date_iso": null,
+    "location": "Zurich",
+    "eligibility": "6-9 months duration, 60-100% FTE",
+    "format": "Internship, 6-9 months, in-person Zurich",
+    "key_info": "Treasury risk exposure relevant to risk management pipeline. Prepare CV emphasizing GARCH models, time series analysis, risk forecasting research under Prof. Malamud, and statistical excellence (6/6 Stats). No explicit deadline visible; monitor Julius Baer careers page for spring 2027 opening.",
+    "apply_url": "https://www.linkedin.com/comm/jobs/view/4400303749/",
+    "priority_score": 5,
+    "firm_category": "asset_manager",
+    "pre_application": null,
+    "action_required": "add_to_watchlist",
+    "source": "linkedin_alerts",
+    "first_seen": "2026-05-25T11:33:30.258050+00:00",
+    "last_seen": "2026-05-25T11:33:30.258050+00:00"
   }
 ]
