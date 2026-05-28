@@ -1660,5 +1660,26 @@
     "source": "linkedin_alerts",
     "first_seen": "2026-05-28T11:07:06.063822+00:00",
     "last_seen": "2026-05-28T11:07:06.063822+00:00"
+  },
+  {
+    "id": "ac505c5ab7182990",
+    "firm": "Eka Finance",
+    "program_name": "Entry Level Quant Analyst - Systematic Equity Team",
+    "deadline": "Non spécifiée dans l'alerte",
+    "deadline_iso": null,
+    "start_date": "Non spécifiée",
+    "start_date_iso": null,
+    "location": "Londres",
+    "eligibility": "Entry-level, systematic equity focus, quantitative background",
+    "format": "Permanent or internship (not specified)",
+    "key_info": "Prepare CV highlighting Pictet Quant Challenge 2nd place, IMC Prosperity Top 1%, factor models/GARCH research with Prof. Malamud, and equity forecasting projects. Cover letter should emphasize systematic trading interest and leadership of Financial Association's Quantitative Research Fund. Likely online assessment (coding + math) and interviews.",
+    "apply_url": "https://www.linkedin.com/comm/jobs/view/4408826667/?trackingId=0PEqi8jJug7LWiIuRecP9w%3D%3D",
+    "priority_score": 9,
+    "firm_category": "quant",
+    "pre_application": "Matteo Giori | Quantitative Analyst Candidate\n\nI am a final-year EPFL Mathematics student entering ETH Zurich's MSc in Applied Mathematics (September 2026), with demonstrated expertise in systematic equity research and quantitative strategy development. My recent 2nd-place finish at the Pictet Group Quant Challenge—where I designed and backtested predictive signals using PCA, ridge regression, and ensemble methods on live market data—directly aligns with Eka Finance's systematic equity focus. Additionally, I achieved Top 1% globally in IMC Prosperity 4, developing market-making and statistical arbitrage algorithms under real-time trading constraints.\n\nMy quantitative foundation is exceptionally strong: 6/6 in Statistics, top-of-class in Bayesian Statistics, and ongoing research with Prof. Semyon Malamud (MSc Financial Engineering Director) on multivariate factor models and GARCH covariance estimation for portfolio risk forecasting. Python pipelines for calibration, backtesting, and out-of-sample validation are central to my work.\n\nAs President of The Financial Association EPFL, I've hosted speakers from Jane Street, Jump Trading, and Hudson River Trading, and launched a Quantitative Research Fund with industry supervision. I combine deep mathematical rigor (stochastic processes, Bayesian inference, continuous optimisation) with practical trading experience and a proven ability to execute under pressure. I am eager to contribute my technical depth and systematic thinking to Eka's team.",
+    "action_required": "apply_now",
+    "source": "linkedin_alerts",
+    "first_seen": "2026-05-28T18:22:31.336194+00:00",
+    "last_seen": "2026-05-28T18:22:31.336194+00:00"
   }
 ]
