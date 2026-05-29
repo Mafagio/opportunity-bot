@@ -1681,5 +1681,26 @@
     "source": "linkedin_alerts",
     "first_seen": "2026-05-28T18:22:31.336194+00:00",
     "last_seen": "2026-05-28T18:22:31.336194+00:00"
+  },
+  {
+    "id": "b8b50a627ed87c32",
+    "firm": "Optiver",
+    "program_name": "Quantitative Researcher Internship, PhD (Summer 2027)",
+    "deadline": null,
+    "deadline_iso": null,
+    "start_date": "Summer 2027",
+    "start_date_iso": "2027-06-01",
+    "location": "Shanghai",
+    "eligibility": "PhD students or advanced researchers in quantitative fields (mathematics, physics, computer science, finance)",
+    "format": "Summer internship, 2-3 months typical",
+    "key_info": "Prepare strong research portfolio: emphasize factor models, GARCH multivariate covariance research under Prof. Malamud, and HMM/EM work on regime detection. Document Python backtesting pipelines and statistical forecasting methodologies. Optiver values research depth and practical implementation. Note: Shanghai location; verify if relocation acceptable.",
+    "apply_url": "https://optiver.com/working-at-optiver/career-opportunities/8214334002/",
+    "priority_score": 6,
+    "firm_category": "quant",
+    "pre_application": "I am a mathematics student at EPFL pursuing a Master's in Applied Mathematics at ETH Zürich, with specialized research in quantitative factor models and stochastic processes. Under Prof. Semyon Malamud (Director, MSc Financial Engineering EPFL), I developed multivariate GARCH and factor-model approaches for covariance estimation and portfolio risk forecasting, combining theoretical rigor with robust Python implementations. My Bachelor thesis applies Hidden Markov Models and EM algorithms to regime detection in financial time series. I achieved top performance in Bayesian Statistics and probability-based coursework, and ranked 2nd at Pictet Group's Quant Challenge (2025), demonstrating applied research capability. As President of EPFL's Financial Association, I've engaged directly with Optiver's peers (Jane Street, Jump, HRT), understanding systematic trading and research culture. My combination of deep probabilistic theory, empirical backtesting experience, and competitive success positions me to contribute meaningfully to Optiver's quantitative research team.",
+    "action_required": "prepare_for_open",
+    "source": "careers_page",
+    "first_seen": "2026-05-29T10:55:19.279536+00:00",
+    "last_seen": "2026-05-29T10:55:19.279536+00:00"
   }
 ]
