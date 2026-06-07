@@ -2927,12 +2927,12 @@
     "program_name": "Greenwich Internships",
     "deadline": null,
     "deadline_iso": null,
-    "start_date": "Été 2027 (présumé)",
+    "start_date": "Summer 2027 (typical)",
     "start_date_iso": "2027-06-01",
     "location": "Greenwich, Connecticut, USA",
-    "eligibility": null,
-    "format": "Internship, in-person",
-    "key_info": "AQR est une firme quant de premier plan (factor models, machine learning appliqué aux marchés). Cependant, le programme est basé aux USA (Greenwich, CT). Matteo n'ayant pas de visa US, ce programme n'est PAS directement applicable. À vérifier : AQR a-t-il des offices européens (Londres, Amsterdam) avec programmes équivalents ?",
+    "eligibility": "Current students, typically rising final year",
+    "format": "Summer internship, in-person",
+    "key_info": "US location requires visa sponsorship (not available to Matteo). Monitor for potential European AQR offices or remote options, though unlikely. Prepare quantitative resume highlighting factor models, GARCH research, and Pictet competition success if European equivalent emerges.",
     "apply_url": "https://www.aqr.com/Our-Firm/Greenwich-Internships",
     "priority_score": 3,
     "firm_category": "quant",
@@ -2940,7 +2940,7 @@
     "action_required": "prepare_for_open",
     "source": "careers_page",
     "first_seen": "2026-05-20T07:27:08.440379+00:00",
-    "last_seen": "2026-06-06T16:37:20.334200+00:00"
+    "last_seen": "2026-06-07T16:48:15.704591+00:00"
   },
   {
     "id": "31cecde52a2c95c4",
@@ -2948,12 +2948,12 @@
     "program_name": "Bangalore Internships",
     "deadline": null,
     "deadline_iso": null,
-    "start_date": "Été 2027 (présumé)",
+    "start_date": "Summer 2027 (typical)",
     "start_date_iso": "2027-06-01",
-    "location": "Bangalore, Inde",
-    "eligibility": null,
-    "format": "Internship, in-person",
-    "key_info": "Programme AQR en Inde. Bien que Matteo soit ouvert à la relocation en UE/UK (priorité absolue Londres), Bangalore n'est pas dans ses préférences géographiques énoncées. Action : vérifier si AQR offre des programmes en Europe (Londres, Amsterdam) avant de poursuivre.",
+    "location": "Bangalore, India",
+    "eligibility": "Current students, typically rising final year",
+    "format": "Summer internship, in-person",
+    "key_info": "India location outside Matteo's stated geographic preferences (London > EU > no US). Not aligned with relocation priorities. Monitor for potential London or European AQR offices instead.",
     "apply_url": "https://www.aqr.com/Our-Firm/Bangalore-Internships",
     "priority_score": 2,
     "firm_category": "quant",
@@ -2961,6 +2961,6 @@
     "action_required": "prepare_for_open",
     "source": "careers_page",
     "first_seen": "2026-05-22T17:20:10.028342+00:00",
-    "last_seen": "2026-06-06T16:37:20.875825+00:00"
+    "last_seen": "2026-06-07T16:48:16.156258+00:00"
   }
 ]
