@@ -2271,27 +2271,6 @@
     "last_seen": "2026-06-09T10:45:47.565029+00:00"
   },
   {
-    "id": "0fcfe3e89e4dd7d6",
-    "firm": "Optiver",
-    "program_name": "FutureFocus Taiwan - Trading and Research",
-    "deadline": null,
-    "deadline_iso": null,
-    "start_date": null,
-    "start_date_iso": null,
-    "location": "Taipei, Taiwan",
-    "eligibility": "Early Careers / recent graduates or near-graduation students",
-    "format": "Unknown duration, likely 3-6 months based on program name",
-    "key_info": "Programme early-career flagship d'Optiver. Préparer CV quantitatif mettant en avant Pictet 2nd place, IMC Prosperity Top 1%, recherche GARCH/factor models, et expérience Heritage. Vérifier ouverture fin 2026/début 2027 pour stage 2027.",
-    "apply_url": "https://optiver.com/join-us/jobs/institutional-sales-and-trading/taipei/futurefocus-taiwan-trading-and-research/",
-    "priority_score": 6,
-    "firm_category": "quant",
-    "pre_application": null,
-    "action_required": "prepare_for_open",
-    "source": "careers_page",
-    "first_seen": "2026-06-09T10:44:52.349810+00:00",
-    "last_seen": "2026-06-09T17:32:27.082719+00:00"
-  },
-  {
     "id": "50e92be841ae8c0d",
     "firm": "Five Rings",
     "program_name": "Campus Full Time 2026 - Quantitative Trader - London",
@@ -2479,5 +2458,26 @@
     "source": "careers_page",
     "first_seen": "2026-05-26T18:10:00.572566+00:00",
     "last_seen": "2026-06-11T11:53:16.783418+00:00"
+  },
+  {
+    "id": "0fcfe3e89e4dd7d6",
+    "firm": "Optiver",
+    "program_name": "FutureFocus Taiwan - Trading and Research",
+    "deadline": null,
+    "deadline_iso": null,
+    "start_date": null,
+    "start_date_iso": null,
+    "location": "Taipei, Taiwan",
+    "eligibility": "Early career (likely target = undergrad/recent grad or M1 students)",
+    "format": "Discovery/rotation program",
+    "key_info": "Optiver's early-career discovery program in trading/research. Monitor for Spring 2027 or Summer 2027 intake; typically opens Q4 2026 or Q1 2027. Check Optiver careers page monthly.",
+    "apply_url": "https://optiver.com/join-us/jobs/institutional-sales-and-trading/taipei/futurefocus-taiwan-trading-and-research/",
+    "priority_score": 5,
+    "firm_category": "quant",
+    "pre_application": null,
+    "action_required": "add_to_watchlist",
+    "source": "careers_page",
+    "first_seen": "2026-06-09T10:44:52.349810+00:00",
+    "last_seen": "2026-06-11T18:29:12.731075+00:00"
   }
 ]
