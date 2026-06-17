@@ -2668,5 +2668,26 @@
     "source": "careers_page",
     "first_seen": "2026-05-26T18:10:00.572566+00:00",
     "last_seen": "2026-06-17T12:00:32.485266+00:00"
+  },
+  {
+    "id": "474856acb6695464",
+    "firm": "Unknown (Jobster via LinkedIn)",
+    "program_name": "Graduate Quant Developer",
+    "deadline": "Not explicitly stated in alert",
+    "deadline_iso": null,
+    "start_date": null,
+    "start_date_iso": null,
+    "location": "London, UK",
+    "eligibility": "Graduate/entry-level (recent graduates or final-year students expected)",
+    "format": "Full-time graduate role, on-site London",
+    "key_info": "Alert title indicates 'Graduate Quant Developer' role in London. Prepare: (1) CV highlighting Pictet 2nd place, IMC Prosperity Top 1%, GARCH/factor model research with Prof. Malamud, C++ and Python proficiency; (2) Cover letter emphasizing quantitative trader mindset + systematic trading experience; (3) Likely technical assessment (LeetCode-style coding + probability/statistics questions). Apply immediately—graduate programs typically close 4-8 weeks before start.",
+    "apply_url": "https://www.linkedin.com/comm/jobs/view/4429297644/?trackingId=tuhmYzgpA5mSxAkZm6w23Q%3D%3D&refId=7CkFfKJ1gzI7pwFB3gheng%3D%3D",
+    "priority_score": 8,
+    "firm_category": "other",
+    "pre_application": "I am a final-year mathematics student at EPFL with deep expertise in quantitative finance and systematic trading. My track record includes 2nd place at the Pictet Group Quant Challenge (designing predictive trading signals with ensemble methods) and Top 1% performance at IMC Prosperity 4 (deploying multi-strategy algos in live market simulation). Currently, I conduct quantitative research under Prof. Semyon Malamud (MSc Financial Engineering Director) on multivariate GARCH and factor models for portfolio risk forecasting. As President of EPFL's Financial Association, I organize speakers from Jane Street, Jump Trading, and Hudson River Trading—giving me direct exposure to industry best practices in systematic trading systems. I hold a 6/6 in Statistics and am currently top of my Bayesian Statistics cohort. My technical stack (Python, C++, MATLAB) and theoretical foundation (stochastic processes, martingales, continuous optimization) position me to immediately contribute to quantitative development. I'm excited to join a trading technology team and build robust systems that drive alpha generation.",
+    "action_required": "apply_now",
+    "source": "linkedin_alerts",
+    "first_seen": "2026-06-17T18:00:54.581625+00:00",
+    "last_seen": "2026-06-17T18:00:54.581625+00:00"
   }
 ]
