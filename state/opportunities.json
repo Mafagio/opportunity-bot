@@ -2859,27 +2859,6 @@
     "last_seen": "2026-06-24T10:30:15.217507+00:00"
   },
   {
-    "id": "4ba1026c1a0a4660",
-    "firm": "AQR Capital Management",
-    "program_name": "Greenwich Internships",
-    "deadline": "Not specified; typically opens Q4 for summer 2027",
-    "deadline_iso": null,
-    "start_date": "Summer 2027 (estimated June-August)",
-    "start_date_iso": "2027-06-01",
-    "location": "Greenwich, Connecticut, USA",
-    "eligibility": "Current/recent students pursuing quantitative finance roles",
-    "format": "Summer internship, in-person",
-    "key_info": "AQR is a world-leading quant firm. HOWEVER: Greenwich HQ is USA-based. Matteo has explicit NO US VISA constraint. Check if AQR offers equivalent European internship programs (London, Amsterdam offices) before committing. If no EU alternative exists, this opportunity is blocked by visa limitation.",
-    "apply_url": "https://www.aqr.com/Our-Firm/Greenwich-Internships",
-    "priority_score": 3,
-    "firm_category": "quant",
-    "pre_application": null,
-    "action_required": "prepare_for_open",
-    "source": "careers_page",
-    "first_seen": "2026-05-20T07:27:08.440379+00:00",
-    "last_seen": "2026-06-24T17:23:59.126998+00:00"
-  },
-  {
     "id": "31cecde52a2c95c4",
     "firm": "AQR Capital Management",
     "program_name": "Bangalore Internships",
@@ -3088,5 +3067,26 @@
     "source": "linkedin_alerts",
     "first_seen": "2026-06-25T10:24:20.382955+00:00",
     "last_seen": "2026-06-25T10:24:20.382955+00:00"
+  },
+  {
+    "id": "4ba1026c1a0a4660",
+    "firm": "AQR Capital Management",
+    "program_name": "Greenwich Internships",
+    "deadline": null,
+    "deadline_iso": null,
+    "start_date": "Summer 2027 (likely)",
+    "start_date_iso": "2027-06-01",
+    "location": "Greenwich, Connecticut, USA",
+    "eligibility": "Not specified in excerpt",
+    "format": "Summer internship (typical format: 8-10 weeks, in-person)",
+    "key_info": "AQR Greenwich is US-based and requires visa sponsorship. Matteo has explicitly stated 'no US visa' and 'focus Europe/UK only.' While AQR is tier-1 quant, this location disqualifies it from his stated preferences.",
+    "apply_url": "https://www.aqr.com/Our-Firm/Greenwich-Internships",
+    "priority_score": 3,
+    "firm_category": "quant",
+    "pre_application": null,
+    "action_required": "prepare_for_open",
+    "source": "careers_page",
+    "first_seen": "2026-05-20T07:27:08.440379+00:00",
+    "last_seen": "2026-06-25T17:27:13.846857+00:00"
   }
 ]
