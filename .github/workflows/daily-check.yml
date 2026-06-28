@@ -10,10 +10,14 @@ name: Daily opportunity check
 #   07:23 UTC = 08:23/09:23 Zurich → run du matin (catch les changements US overnight)
 #   15:23 UTC = 16:23/17:23 Zurich → run d'après-midi (catch les Google Alerts arrivées dans la journée)
 
+# DÉSACTIVÉ (2026-06-28) : les runs automatiques coûtaient trop cher (appels API
+# Anthropic 2×/jour). Le schedule ci-dessous est commenté pour stopper tout run
+# automatique. Le bot reste lançable manuellement via "Run workflow" sur GitHub
+# (workflow_dispatch). Pour réactiver : décommenter le bloc `schedule`.
 on:
-  schedule:
-    - cron: '23 7 * * *'
-    - cron: '23 15 * * *'
+  # schedule:
+  #   - cron: '23 7 * * *'
+  #   - cron: '23 15 * * *'
   workflow_dispatch:
 
 jobs:
